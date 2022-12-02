@@ -11,7 +11,14 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 import static javax.swing.SwingUtilities.convertPoint;
@@ -32,6 +39,42 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame implements Mo
 
     public FereastraMeseAdministrator() {
         initComponents();
+        
+        // Extragere mese din BD
+        try{
+            Connection con = BazaDeDate.getInstanta();
+            Statement stmt = con.createStatement();
+            String sql = "SELECT * FROM Masa";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()) {
+                // Extragere pozitie masa
+                int x = rs.getInt(2);
+                int y = rs.getInt(3);
+                
+                // Instantiere masa
+                JButton tmp = new JButton();
+                tmp.setLocation(x, y);
+                tmp.setSize(75, 75);
+                tmp.addMouseListener(this);
+                tmp.addMouseMotionListener(this);
+
+                // Adaugare masa in fereastra
+                tmp.setVisible(true);
+                jPanel1.add(tmp);
+                // Adaugare masa in memorie
+                listaMese.add(tmp);
+            }
+            rs.close();
+            stmt.close();
+            con.close();
+            
+            // Actualizare fereastra
+            this.revalidate();
+            this.repaint();
+        }
+        catch(Exception e){
+            System.out.println("EROARE EXTRAGERE MESE DIN BD");
+        }
     }
 
     /**
@@ -109,9 +152,12 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame implements Mo
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        int xImplicit = 100;
+        int yImplicit = 100;
+        
         JButton tmp = new JButton();
-        tmp.setText("asdsd");
-        tmp.setLocation(100, 100);
+        tmp.setText("");
+        tmp.setLocation(xImplicit, yImplicit);
         tmp.setSize(75, 75);
 
         // Verificare sa nu se poata instantia o masa noua
@@ -121,7 +167,22 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame implements Mo
                 System.out.println("Exista alta masa in pozitia de spawn.");
                 return;
             }
-         
+        
+        try {
+            Connection con = BazaDeDate.getInstanta();
+            String sql = "INSERT INTO Masa(x, y) value (?, ?)";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1, xImplicit);
+            pstmt.setInt(2, yImplicit);
+            pstmt.execute();
+            //pstmt.close();
+            //con.close();
+            System.out.println("Masa adaugata cu succes.");
+            
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println("EROARE BUTON ADAUGA MASA");
+        }
+        
         listaMese.add(tmp);
         jPanel1.add(tmp);
         tmp.setVisible(true);
@@ -175,6 +236,7 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame implements Mo
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new FereastraMeseAdministrator().setVisible(true);
             }
