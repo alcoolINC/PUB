@@ -17,8 +17,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 import static javax.swing.SwingUtilities.convertPoint;
@@ -27,18 +25,25 @@ import static javax.swing.SwingUtilities.convertPoint;
  *
  * @author User
  */
-public class FereastraMeseAdministrator extends javax.swing.JFrame implements MouseListener, MouseMotionListener {
+public class FereastraMeseAdministrator extends javax.swing.JFrame
+                                implements MouseListener, MouseMotionListener {
 
     /**
      * Creates new form FereastraMeseAdministrator
      */
+    private int laturaMasa;
     private Point pozitieStart;
     private JButton masaSelectata;
-    private static ArrayList<JButton> listaMese = new ArrayList();
-    Boolean modStergere = false;
+    private static ArrayList<JButton> listaMese;
+    Boolean modStergere;
 
     public FereastraMeseAdministrator() {
         initComponents();
+        
+        // Initializare variabile
+        laturaMasa = 75;
+        listaMese = new ArrayList();
+        modStergere = false;
         
         // Extragere mese din BD
         try{
@@ -54,7 +59,7 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame implements Mo
                 // Instantiere masa
                 JButton tmp = new JButton();
                 tmp.setLocation(x, y);
-                tmp.setSize(75, 75);
+                tmp.setSize(laturaMasa, laturaMasa);
                 tmp.addMouseListener(this);
                 tmp.addMouseMotionListener(this);
 
@@ -66,7 +71,6 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame implements Mo
             }
             rs.close();
             stmt.close();
-            con.close();
             
             // Actualizare fereastra
             this.revalidate();
@@ -86,16 +90,16 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame implements Mo
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        butonAdaugareMasa = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
+        butonModStergere = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("adauga masa");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        butonAdaugareMasa.setText("adauga masa");
+        butonAdaugareMasa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                butonAdaugareMasaActionPerformed(evt);
             }
         });
 
@@ -112,10 +116,10 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame implements Mo
             .addGap(0, 339, Short.MAX_VALUE)
         );
 
-        jButton2.setText("jButton2");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        butonModStergere.setText("mod stergere");
+        butonModStergere.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                butonModStergereActionPerformed(evt);
             }
         });
 
@@ -128,8 +132,8 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame implements Mo
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(butonAdaugareMasa)
+                    .addComponent(butonModStergere))
                 .addGap(39, 39, 39))
         );
         layout.setVerticalGroup(
@@ -138,9 +142,9 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame implements Mo
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(86, 86, 86)
-                        .addComponent(jButton1)
+                        .addComponent(butonAdaugareMasa)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2))
+                        .addComponent(butonModStergere))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(60, 60, 60)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -150,7 +154,7 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame implements Mo
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void butonAdaugareMasaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonAdaugareMasaActionPerformed
         // TODO add your handling code here:
         int xImplicit = 100;
         int yImplicit = 100;
@@ -158,7 +162,7 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame implements Mo
         JButton tmp = new JButton();
         tmp.setText("");
         tmp.setLocation(xImplicit, yImplicit);
-        tmp.setSize(75, 75);
+        tmp.setSize(laturaMasa, laturaMasa);
 
         // Verificare sa nu se poata instantia o masa noua
         // Daca in pozitia de spawn se afla alta masa
@@ -171,14 +175,12 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame implements Mo
         try {
             Connection con = BazaDeDate.getInstanta();
             String sql = "INSERT INTO Masa(x, y) value (?, ?)";
-            PreparedStatement pstmt = con.prepareStatement(sql);
-            pstmt.setInt(1, xImplicit);
-            pstmt.setInt(2, yImplicit);
-            pstmt.execute();
-            //pstmt.close();
-            //con.close();
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, xImplicit);
+            stmt.setInt(2, yImplicit);
+            stmt.execute();
+            stmt.close();
             System.out.println("Masa adaugata cu succes.");
-            
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println("EROARE BUTON ADAUGA MASA");
         }
@@ -194,18 +196,18 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame implements Mo
         this.revalidate();
         // Redeseneaza fereastra
         this.repaint();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_butonAdaugareMasaActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void butonModStergereActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonModStergereActionPerformed
         // TODO add your handling code here:
         if (modStergere == false) {
-            jButton2.setBackground(Color.RED);
+            butonModStergere.setBackground(Color.RED);
             modStergere = true;
         } else {
             modStergere = false;
-            jButton2.setBackground(Color.GREEN);
+            butonModStergere.setBackground(butonAdaugareMasa.getBackground());
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_butonModStergereActionPerformed
 
     /**
      * @param args the command line arguments
@@ -244,8 +246,8 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame implements Mo
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton butonAdaugareMasa;
+    private javax.swing.JButton butonModStergere;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 
@@ -259,6 +261,19 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame implements Mo
         masaSelectata = (JButton) e.getSource();
         
         if (modStergere == true) {
+            // Stergerea mesei din baza de date
+            try {
+                Connection con = BazaDeDate.getInstanta();
+                String sql = "DELETE FROM Masa WHERE x = ? AND y = ?";
+                PreparedStatement ps = con.prepareStatement(sql);
+                ps.setInt(1, masaSelectata.getX());
+                ps.setInt(2, masaSelectata.getY());
+                ps.execute();
+                ps.close();
+            } catch (ClassNotFoundException | SQLException ex) {
+                System.out.println("EROARE STERGERE MASA");
+            }
+            
             //Stergerea mesei din lista
             listaMese.remove(masaSelectata);
             
@@ -269,7 +284,8 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame implements Mo
             return;
         }
         
-        pozitieStart = SwingUtilities.convertPoint(masaSelectata, e.getPoint(), masaSelectata.getParent());
+        pozitieStart = SwingUtilities.convertPoint(masaSelectata, e.getPoint(),
+                                                    masaSelectata.getParent());
     }
 
     @Override
@@ -288,25 +304,51 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame implements Mo
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        Point pozitieMouse = convertPoint(masaSelectata, e.getPoint(), masaSelectata.getParent());
+        Point pozitieMouse = convertPoint(masaSelectata, e.getPoint(),
+                                            masaSelectata.getParent());
         if (this.getBounds().contains(pozitieMouse)) {
+            Point pozitieVeche = masaSelectata.getLocation();
             Point pozitieNoua = masaSelectata.getLocation();
-            pozitieNoua.translate(pozitieMouse.x - pozitieStart.x, pozitieMouse.y - pozitieStart.y);
+            pozitieNoua.translate(pozitieMouse.x - pozitieStart.x,
+                                    pozitieMouse.y - pozitieStart.y);
 
             // Prevenim depasirea panoului
             pozitieNoua.x = Math.max(pozitieNoua.x, 0);
             pozitieNoua.y = Math.max(pozitieNoua.y, 0);
-            pozitieNoua.x = Math.min(pozitieNoua.x, masaSelectata.getParent().getWidth() - masaSelectata.getWidth());
-            pozitieNoua.y = Math.min(pozitieNoua.y, masaSelectata.getParent().getHeight() - masaSelectata.getHeight());
+            pozitieNoua.x = Math.min(pozitieNoua.x, masaSelectata.getParent().getWidth()
+                                        - masaSelectata.getWidth());
+            pozitieNoua.y = Math.min(pozitieNoua.y, masaSelectata.getParent().getHeight()
+                                        - masaSelectata.getHeight());
 
+            // Prevenim coliziunea
             for (int i = 0; i < listaMese.size(); i++) {
-                if (new Rectangle(pozitieNoua.x, pozitieNoua.y, 75, 75).intersects(listaMese.get(i).getBounds()) & listaMese.get(i) != masaSelectata) {
+                Rectangle masaInViitor = new Rectangle(pozitieNoua.x, pozitieNoua.y,
+                                                        laturaMasa, laturaMasa);
+                
+                if (masaInViitor.intersects(listaMese.get(i).getBounds())
+                        & (listaMese.get(i) != masaSelectata) ) {
                     return;
                 }
             }
 
+            // Actualizare locatie
             pozitieStart = pozitieMouse;
             masaSelectata.setLocation(pozitieNoua);
+            
+            // Actualizare locatie in BD
+            try {
+                Connection con = BazaDeDate.getInstanta();
+                String sql = "UPDATE Masa SET x = ?, y = ? WHERE x = ? AND y = ?";
+                PreparedStatement stmt = con.prepareStatement(sql);
+                stmt.setInt(1, pozitieNoua.x);
+                stmt.setInt(2, pozitieNoua.y);
+                stmt.setInt(3, pozitieVeche.x);
+                stmt.setInt(4, pozitieVeche.y);
+                stmt.execute();
+                stmt.close();
+            } catch (ClassNotFoundException | SQLException ex) {
+                System.out.println("EROARE ACTUALIZARE LOCATIE MASA IN BD");
+            }
         }
     }
 
