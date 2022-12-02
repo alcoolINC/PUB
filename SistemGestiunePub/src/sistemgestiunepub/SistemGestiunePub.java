@@ -16,7 +16,8 @@ public class SistemGestiunePub {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        new FereastraLogin().setVisible(true);
+        //new FereastraLogin().setVisible(true);
+        new FereastraMeseAdministrator().setVisible(true);
     }
     
 }
