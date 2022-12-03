@@ -25,60 +25,26 @@ import static javax.swing.SwingUtilities.convertPoint;
  *
  * @author User
  */
-public class FereastraMeseAdministrator extends javax.swing.JFrame
+public class FereastraMeseAdmin extends javax.swing.JFrame
                                 implements MouseListener, MouseMotionListener {
 
     /**
-     * Creates new form FereastraMeseAdministrator
+     * Creates new form FereastraMeseAdmin
      */
-    private int laturaMasa;
     private Point pozitieStart;
     private JButton masaSelectata;
-    private static ArrayList<JButton> listaMese;
-    Boolean modStergere;
+    private Boolean modStergere;
 
-    public FereastraMeseAdministrator() {
+    public FereastraMeseAdmin() {
         initComponents();
         
         // Initializare variabile
-        laturaMasa = 75;
-        listaMese = new ArrayList();
         modStergere = false;
         
-        // Extragere mese din BD
-        try{
-            Connection con = BazaDeDate.getInstanta();
-            Statement stmt = con.createStatement();
-            String sql = "SELECT * FROM Masa";
-            ResultSet rs = stmt.executeQuery(sql);
-            while(rs.next()) {
-                // Extragere pozitie masa
-                int x = rs.getInt(2);
-                int y = rs.getInt(3);
-                
-                // Instantiere masa
-                JButton tmp = new JButton();
-                tmp.setLocation(x, y);
-                tmp.setSize(laturaMasa, laturaMasa);
-                tmp.addMouseListener(this);
-                tmp.addMouseMotionListener(this);
-
-                // Adaugare masa in fereastra
-                tmp.setVisible(true);
-                jPanel1.add(tmp);
-                // Adaugare masa in memorie
-                listaMese.add(tmp);
-            }
-            rs.close();
-            stmt.close();
-            
-            // Actualizare fereastra
-            this.revalidate();
-            this.repaint();
-        }
-        catch(Exception e){
-            System.out.println("EROARE EXTRAGERE MESE DIN BD");
-        }
+        BazaDeDate.extrageMese(panouMese, this);
+        
+        panouMese.revalidate();
+        panouMese.repaint();
     }
 
     /**
@@ -91,8 +57,10 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame
     private void initComponents() {
 
         butonAdaugareMasa = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        panouMese = new javax.swing.JPanel();
         butonModStergere = new javax.swing.JButton();
+        butonGestionareAngajati = new javax.swing.JButton();
+        butonGestionareProduse = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -103,16 +71,16 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame
             }
         });
 
-        jPanel1.setBackground(new java.awt.Color(0, 204, 204));
+        panouMese.setBackground(new java.awt.Color(0, 204, 204));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout panouMeseLayout = new javax.swing.GroupLayout(panouMese);
+        panouMese.setLayout(panouMeseLayout);
+        panouMeseLayout.setHorizontalGroup(
+            panouMeseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 481, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        panouMeseLayout.setVerticalGroup(
+            panouMeseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 339, Short.MAX_VALUE)
         );
 
@@ -123,18 +91,40 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame
             }
         });
 
+        butonGestionareAngajati.setText("gestioneaza angajati");
+        butonGestionareAngajati.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                butonGestionareAngajatiActionPerformed(evt);
+            }
+        });
+
+        butonGestionareProduse.setText("gestioneaza produse");
+        butonGestionareProduse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                butonGestionareProduseActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(50, 50, 50)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addComponent(panouMese, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(butonAdaugareMasa)
-                    .addComponent(butonModStergere))
-                .addGap(39, 39, 39))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(butonAdaugareMasa)
+                            .addComponent(butonModStergere))
+                        .addGap(39, 39, 39))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(butonGestionareProduse)
+                            .addComponent(butonGestionareAngajati))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -144,10 +134,14 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame
                         .addGap(86, 86, 86)
                         .addComponent(butonAdaugareMasa)
                         .addGap(18, 18, 18)
-                        .addComponent(butonModStergere))
+                        .addComponent(butonModStergere)
+                        .addGap(34, 34, 34)
+                        .addComponent(butonGestionareAngajati)
+                        .addGap(18, 18, 18)
+                        .addComponent(butonGestionareProduse))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(60, 60, 60)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(panouMese, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(50, Short.MAX_VALUE))
         );
 
@@ -158,44 +152,19 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame
         // TODO add your handling code here:
         int xImplicit = 100;
         int yImplicit = 100;
-        
-        JButton tmp = new JButton();
-        tmp.setText("");
-        tmp.setLocation(xImplicit, yImplicit);
-        tmp.setSize(laturaMasa, laturaMasa);
+        Masa masa = new Masa(xImplicit, yImplicit, panouMese);
+        masa.buton.addMouseListener(this);
+        masa.buton.addMouseMotionListener(this);
 
-        // Verificare sa nu se poata instantia o masa noua
-        // Daca in pozitia de spawn se afla alta masa
-        for(int i=0; i<listaMese.size(); i++)
-            if(tmp.getBounds().intersects(listaMese.get(i).getBounds())){
-                System.out.println("Exista alta masa in pozitia de spawn.");
-                return;
-            }
-        
-        try {
-            Connection con = BazaDeDate.getInstanta();
-            String sql = "INSERT INTO Masa(x, y) value (?, ?)";
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, xImplicit);
-            stmt.setInt(2, yImplicit);
-            stmt.execute();
-            stmt.close();
-            System.out.println("Masa adaugata cu succes.");
-        } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("EROARE BUTON ADAUGA MASA");
+        if (Masa.verifica(masa.buton)) {
+            Masa.sterge(masa.buton, panouMese);
+            return;
         }
         
-        listaMese.add(tmp);
-        jPanel1.add(tmp);
-        tmp.setVisible(true);
+        BazaDeDate.adaugaMasa(xImplicit, yImplicit);
         
-        tmp.addMouseListener(this);
-        tmp.addMouseMotionListener(this);
-
-        // Recalculeaza pozitii Layout Manager
-        this.revalidate();
-        // Redeseneaza fereastra
-        this.repaint();
+        panouMese.revalidate();
+        panouMese.repaint();
     }//GEN-LAST:event_butonAdaugareMasaActionPerformed
 
     private void butonModStergereActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonModStergereActionPerformed
@@ -208,6 +177,20 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame
             butonModStergere.setBackground(butonAdaugareMasa.getBackground());
         }
     }//GEN-LAST:event_butonModStergereActionPerformed
+
+    private void butonGestionareAngajatiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonGestionareAngajatiActionPerformed
+        // TODO add your handling code here:
+        //this.setVisible(false);
+        FereastraAngajati f = new FereastraAngajati();
+        f.setVisible(true);
+    }//GEN-LAST:event_butonGestionareAngajatiActionPerformed
+
+    private void butonGestionareProduseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonGestionareProduseActionPerformed
+        // TODO add your handling code here:
+        //this.setVisible(false);
+        FereastraProduse f = new FereastraProduse();
+        f.setVisible(true);
+    }//GEN-LAST:event_butonGestionareProduseActionPerformed
 
     /**
      * @param args the command line arguments
@@ -226,29 +209,32 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FereastraMeseAdministrator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FereastraMeseAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FereastraMeseAdministrator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FereastraMeseAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FereastraMeseAdministrator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FereastraMeseAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FereastraMeseAdministrator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FereastraMeseAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new FereastraMeseAdministrator().setVisible(true);
+                new FereastraMeseAdmin().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton butonAdaugareMasa;
+    private javax.swing.JButton butonGestionareAngajati;
+    private javax.swing.JButton butonGestionareProduse;
     private javax.swing.JButton butonModStergere;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel panouMese;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -259,31 +245,13 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame
     public void mousePressed(MouseEvent e) {
         // Detectarea mesei apasate
         masaSelectata = (JButton) e.getSource();
-        
         if (modStergere == true) {
-            // Stergerea mesei din baza de date
-            try {
-                Connection con = BazaDeDate.getInstanta();
-                String sql = "DELETE FROM Masa WHERE x = ? AND y = ?";
-                PreparedStatement ps = con.prepareStatement(sql);
-                ps.setInt(1, masaSelectata.getX());
-                ps.setInt(2, masaSelectata.getY());
-                ps.execute();
-                ps.close();
-            } catch (ClassNotFoundException | SQLException ex) {
-                System.out.println("EROARE STERGERE MASA");
-            }
-            
-            //Stergerea mesei din lista
-            listaMese.remove(masaSelectata);
-            
-            // Stergerea mesei din fereastra
-            jPanel1.remove(masaSelectata);
-            jPanel1.revalidate();
-            jPanel1.repaint();
+            BazaDeDate.stergeMasa(masaSelectata);
+            Masa.sterge(masaSelectata, panouMese);
+            panouMese.revalidate();
+            panouMese.repaint();
             return;
         }
-        
         pozitieStart = SwingUtilities.convertPoint(masaSelectata, e.getPoint(),
                                                     masaSelectata.getParent());
     }
@@ -306,6 +274,7 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame
     public void mouseDragged(MouseEvent e) {
         Point pozitieMouse = convertPoint(masaSelectata, e.getPoint(),
                                             masaSelectata.getParent());
+        
         if (this.getBounds().contains(pozitieMouse)) {
             Point pozitieVeche = masaSelectata.getLocation();
             Point pozitieNoua = masaSelectata.getLocation();
@@ -321,12 +290,12 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame
                                         - masaSelectata.getHeight());
 
             // Prevenim coliziunea
-            for (int i = 0; i < listaMese.size(); i++) {
+            for (int i = 0; i < Masa.mese.size(); i++) {
                 Rectangle masaInViitor = new Rectangle(pozitieNoua.x, pozitieNoua.y,
-                                                        laturaMasa, laturaMasa);
+                                                        Masa.latura, Masa.latura);
                 
-                if (masaInViitor.intersects(listaMese.get(i).getBounds())
-                        & (listaMese.get(i) != masaSelectata) ) {
+                if (masaInViitor.intersects(Masa.mese.get(i).buton.getBounds())
+                        & (Masa.mese.get(i).buton != masaSelectata) ) {
                     return;
                 }
             }
@@ -334,21 +303,7 @@ public class FereastraMeseAdministrator extends javax.swing.JFrame
             // Actualizare locatie
             pozitieStart = pozitieMouse;
             masaSelectata.setLocation(pozitieNoua);
-            
-            // Actualizare locatie in BD
-            try {
-                Connection con = BazaDeDate.getInstanta();
-                String sql = "UPDATE Masa SET x = ?, y = ? WHERE x = ? AND y = ?";
-                PreparedStatement stmt = con.prepareStatement(sql);
-                stmt.setInt(1, pozitieNoua.x);
-                stmt.setInt(2, pozitieNoua.y);
-                stmt.setInt(3, pozitieVeche.x);
-                stmt.setInt(4, pozitieVeche.y);
-                stmt.execute();
-                stmt.close();
-            } catch (ClassNotFoundException | SQLException ex) {
-                System.out.println("EROARE ACTUALIZARE LOCATIE MASA IN BD");
-            }
+            BazaDeDate.actualizeazaPozitieMasa(pozitieNoua, pozitieVeche);
         }
     }
 

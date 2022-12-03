@@ -107,7 +107,7 @@ public class FereastraLogin extends javax.swing.JFrame {
                 Boolean rol = rs.getBoolean(5);
                 System.out.println(rol);
                 if (rol) {
-                    new FereastraMeseAdministrator().setVisible(true);
+                    new FereastraMeseAdmin().setVisible(true);
                 }
                 else {
                     new FereastraMeseAngajat().setVisible(true);
