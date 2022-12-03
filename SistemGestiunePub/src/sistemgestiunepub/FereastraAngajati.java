@@ -5,6 +5,8 @@
  */
 package sistemgestiunepub;
 
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author User
@@ -16,6 +18,7 @@ public class FereastraAngajati extends javax.swing.JFrame {
      */
     public FereastraAngajati() {
         initComponents();
+        BazaDeDate.extrageUtilizatori(jTable1);
     }
 
     /**
@@ -27,21 +30,136 @@ public class FereastraAngajati extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        campUser = new javax.swing.JTextField();
+        campNume = new javax.swing.JTextField();
+        campParola = new javax.swing.JTextField();
+        campRol = new javax.swing.JTextField();
+        butonAdaugareUtlizator = new javax.swing.JButton();
+        butonStergereUtilizator = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "id", "user", "nume", "rol"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
+
+        butonAdaugareUtlizator.setText("adauga");
+        butonAdaugareUtlizator.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                butonAdaugareUtlizatorActionPerformed(evt);
+            }
+        });
+
+        butonStergereUtilizator.setText("sterge");
+        butonStergereUtilizator.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                butonStergereUtilizatorActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("user");
+
+        jLabel2.setText("nume");
+
+        jLabel3.setText("parola");
+
+        jLabel4.setText("rol");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(campParola, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                        .addComponent(butonAdaugareUtlizator)
+                        .addComponent(butonStergereUtilizator)
+                        .addComponent(campUser))
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(campRol, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+                        .addComponent(campNume))
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel4))
+                .addGap(21, 21, 21))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(campUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(campNume, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(3, 3, 3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(campParola, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(campRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(40, 40, 40)
+                .addComponent(butonAdaugareUtlizator)
+                .addGap(18, 18, 18)
+                .addComponent(butonStergereUtilizator)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void butonAdaugareUtlizatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonAdaugareUtlizatorActionPerformed
+        // TODO add your handling code here:
+        String user = campUser.getText();
+        String nume = campNume.getText();
+        String parola = campParola.getText();
+        String rol = campRol.getText();
+        
+        BazaDeDate.adaugaUtilizator(user, parola, nume, rol);
+        String id = BazaDeDate.returneazaUltimaCheie();
+        
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        String[] row = {id, user, nume, rol};
+        model.addRow(row);
+    }//GEN-LAST:event_butonAdaugareUtlizatorActionPerformed
+
+    private void butonStergereUtilizatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonStergereUtilizatorActionPerformed
+        // TODO add your handling code here:
+        if (jTable1.getSelectedRowCount() == 1) {
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            int row = jTable1.getSelectedRow();
+            String id = (String) model.getValueAt(row, 0);
+            BazaDeDate.stergeUtilizator(id);
+            model.removeRow(row);
+        }
+    }//GEN-LAST:event_butonStergereUtilizatorActionPerformed
 
     /**
      * @param args the command line arguments
@@ -82,5 +200,17 @@ public class FereastraAngajati extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton butonAdaugareUtlizator;
+    private javax.swing.JButton butonStergereUtilizator;
+    private javax.swing.JTextField campNume;
+    private javax.swing.JTextField campParola;
+    private javax.swing.JTextField campRol;
+    private javax.swing.JTextField campUser;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

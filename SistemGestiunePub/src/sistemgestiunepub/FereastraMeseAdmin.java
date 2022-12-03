@@ -11,13 +11,8 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import static javax.swing.SwingUtilities.convertPoint;
 
@@ -40,9 +35,9 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
         
         // Initializare variabile
         modStergere = false;
+        jLabelIdUser.setText(String.valueOf(FereastraLogin.idUser));
         
-        BazaDeDate.extrageMese(panouMese, this);
-        
+        BazaDeDate.extrageMese(panouMese, this);  
         panouMese.revalidate();
         panouMese.repaint();
     }
@@ -61,6 +56,7 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
         butonModStergere = new javax.swing.JButton();
         butonGestionareAngajati = new javax.swing.JButton();
         butonGestionareProduse = new javax.swing.JButton();
+        jLabelIdUser = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -105,6 +101,8 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
             }
         });
 
+        jLabelIdUser.setText("jLabel1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -125,13 +123,19 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
                             .addComponent(butonGestionareProduse)
                             .addComponent(butonGestionareAngajati))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabelIdUser)
+                .addGap(134, 134, 134))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(86, 86, 86)
+                        .addContainerGap()
+                        .addComponent(jLabelIdUser)
+                        .addGap(57, 57, 57)
                         .addComponent(butonAdaugareMasa)
                         .addGap(18, 18, 18)
                         .addComponent(butonModStergere)
@@ -162,6 +166,10 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
         }
         
         BazaDeDate.adaugaMasa(xImplicit, yImplicit);
+        // Adaugare id
+        String stringId = BazaDeDate.returneazaUltimaCheie();
+        int integerId = Integer.parseInt(stringId);
+        masa.setId(integerId);
         
         panouMese.revalidate();
         panouMese.repaint();
@@ -182,7 +190,9 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
         // TODO add your handling code here:
         //this.setVisible(false);
         FereastraAngajati f = new FereastraAngajati();
+        f.setAlwaysOnTop(true);
         f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);   
     }//GEN-LAST:event_butonGestionareAngajatiActionPerformed
 
     private void butonGestionareProduseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonGestionareProduseActionPerformed
@@ -190,6 +200,9 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
         //this.setVisible(false);
         FereastraProduse f = new FereastraProduse();
         f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        
+        
     }//GEN-LAST:event_butonGestionareProduseActionPerformed
 
     /**
@@ -234,6 +247,7 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
     private javax.swing.JButton butonGestionareAngajati;
     private javax.swing.JButton butonGestionareProduse;
     private javax.swing.JButton butonModStergere;
+    private javax.swing.JLabel jLabelIdUser;
     private javax.swing.JPanel panouMese;
     // End of variables declaration//GEN-END:variables
 

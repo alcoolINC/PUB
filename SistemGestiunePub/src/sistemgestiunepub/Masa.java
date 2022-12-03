@@ -7,7 +7,6 @@ package sistemgestiunepub;
 
 import java.util.ArrayList;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 /**
@@ -19,18 +18,33 @@ public class Masa {
     public static int latura = 75;
     public static ArrayList<Masa> mese = new ArrayList();
 
+    private int id;
     public JButton buton;
 
     public Masa(int x, int y, JPanel panou) {
 
         mese.add(this);
 
+        //JButton
         buton = new JButton();
         buton.setLocation(x, y);
         buton.setSize(latura, latura);
         buton.setVisible(true);
-
         panou.add(buton);
+    }
+    
+    public void setId(int id) {
+        this.id = id;
+        buton.setText(String.valueOf(id));
+    }
+    
+    public static int getId(JButton cautat) {
+        for (Masa i: mese) {
+            if (i.buton == cautat) {
+                return i.id;
+            }
+        }
+        return -1;
     }
 
     public static void sterge(JButton deSters, JPanel panou) {

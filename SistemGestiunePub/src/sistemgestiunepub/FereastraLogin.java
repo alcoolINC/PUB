@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -21,6 +23,9 @@ public class FereastraLogin extends javax.swing.JFrame {
     /**
      * Creates new form FereastraLogin
      */
+    
+    static public int idUser;
+    
     public FereastraLogin() {
         initComponents();
     }
@@ -94,33 +99,16 @@ public class FereastraLogin extends javax.swing.JFrame {
         // TODO add your handling code here:
         String user = campUser.getText();
         String parola = campParola.getText();
-        
-        try {
-            Connection con = BazaDeDate.getInstanta();
-            String sql = "SELECT * FROM Utilizator WHERE username='" + user 
-                    + "' AND parola='" + parola + "'";
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            
-            if (rs.next()) {
-                // Daca a returnat ceva query-ul
-                Boolean rol = rs.getBoolean(5);
-                System.out.println(rol);
-                if (rol) {
-                    new FereastraMeseAdmin().setVisible(true);
-                }
-                else {
-                    new FereastraMeseAngajat().setVisible(true);
-                }
-                //dispose();
-            }
-            
-            rs.close();
-            stmt.close();
-            con.close();
-        } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(FereastraLogin.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("EROARE BUTON LOGIN");
+
+        int returnat = BazaDeDate.autentificare(user, parola);
+        if (returnat == 1) {
+            dispose();
+            new FereastraMeseAdmin().setVisible(true);
+        } else if (returnat == 0) {
+            dispose();
+            new FereastraMeseAngajat().setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(new JFrame(), "User sau parola gresita!");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
