@@ -14,9 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -73,39 +70,6 @@ public class BazaDeDate {
             System.out.println("EROARE BUTON LOGIN");
         }
         return -1;
-    }
-
-    public static void extrageMese(JPanel panouMese, JFrame fereastra) {
-        try {
-            java.sql.Connection con = BazaDeDate.getInstanta();
-            Statement stmt = con.createStatement();
-            String sql = "SELECT id, x, y FROM Masa";
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                // Extragere pozitie masa
-                int id = rs.getInt(1);
-                int x = rs.getInt(2);
-                int y = rs.getInt(3);
-
-                // Instantiere masa
-                Masa masa = new Masa(x, y, panouMese);
-                masa.setId(id);
-
-                if (fereastra instanceof FereastraMeseAdmin) {
-                    // Fereastra admin
-                    masa.buton.addMouseListener((FereastraMeseAdmin) fereastra);
-                    masa.buton.addMouseMotionListener((FereastraMeseAdmin) fereastra);
-                }
-                else {
-                    // Fereastra angajat
-                    masa.buton.addMouseListener((FereastraMeseAngajat) fereastra);
-                }
-            }
-            rs.close();
-            stmt.close();
-        } catch (Exception e) {
-            System.out.println("EROARE EXTRAGERE MESE DIN BD");
-        }
     }
 
     public static void adaugaMasa(int x, int y) {
@@ -171,15 +135,15 @@ public class BazaDeDate {
         }
     }
 
-    public static String returneazaUltimaCheie() {
-        String id = "-1";
+    public static int returneazaUltimaCheie() {
+        int id = -1;
         try {
             Connection con = getInstanta();
             Statement stmt = con.createStatement();
             String sql = "SELECT @@IDENTITY;";
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
-                id = rs.getString(1);
+                id = rs.getInt(1);
             } else {
                 System.out.println("EROARE CHEIE PRIMARA");
             }
@@ -187,28 +151,6 @@ public class BazaDeDate {
             System.out.println("EROARE AFLARE CHEIE PRIMARA UTILIZATOR");
         }
         return id;
-    }
-
-    public static void extrageUtilizatori(JTable jTable) {
-        try {
-            DefaultTableModel model = (DefaultTableModel) jTable.getModel();
-            Connection con = getInstanta();
-            Statement stmt = con.createStatement();
-            String sql = "SELECT id, username, nume, rol FROM Utilizator";
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                String id = rs.getString(1);
-                String user = rs.getString(2);
-                String nume = rs.getString(3);
-                String rol = rs.getString(4);
-                String[] row = {id, user, nume, rol};
-                model.addRow(row);
-            }
-            rs.close();
-            stmt.close();
-        } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("EROARE EXTRAGERE UTILIZATORI");
-        }
     }
 
     public static void stergeUtilizator(String id) {
@@ -221,27 +163,6 @@ public class BazaDeDate {
             stmt.close();
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println("EROARE STEGERE UTILIZATOR");
-        }
-    }
-
-    public static void extrageProduse(JTable jTable) {
-        try {
-            DefaultTableModel model = (DefaultTableModel) jTable.getModel();
-            Connection con = getInstanta();
-            Statement stmt = con.createStatement();
-            String sql = "SELECT id, nume, pret FROM Produs";
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                String id = rs.getString(1);
-                String nume = rs.getString(2);
-                String produs = rs.getString(3);
-                String[] row = {id, nume, produs};
-                model.addRow(row);
-            }
-            rs.close();
-            stmt.close();
-        } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("EROARE EXTRAGERE PRODUSE");
         }
     }
 
@@ -284,6 +205,37 @@ public class BazaDeDate {
             stmt.close();
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println("EROARE ACTUALIZARE PRODUS");
+        }
+    }
+
+    public static void adaugaNota(Nota nota) {
+        try {
+            Connection con = getInstanta();
+            String sql = "INSERT INTO Nota(id_user, id_masa, total) VALUE (?, ?, ?)";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, nota.getIdUser());
+            stmt.setInt(2, nota.getIdMasa());
+            stmt.setInt(3, nota.getTotal());
+            stmt.execute();
+            stmt.close();
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println("EROARE ADAUGARE NOTA");
+        }
+    }
+
+    public static void genereazaRaport(DefaultTableModel model) {
+        try {
+            Connection con = getInstanta();
+            String sql = "select id_user, sum(total) from Nota group by id_user;";
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                String[] rand = {rs.getString(1), rs.getString(2)};
+                model.addRow(rand);
+            }
+            stmt.close();
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println("EROARE ADAUGARE NOTA");
         }
     }
 }

@@ -18,7 +18,8 @@ public class FereastraAngajati extends javax.swing.JFrame {
      */
     public FereastraAngajati() {
         initComponents();
-        BazaDeDate.extrageUtilizatori(jTable1);
+        Angajat.citeste();
+        Angajat.completeazaJtable((DefaultTableModel) jTable1.getModel());
     }
 
     /**
@@ -141,24 +142,35 @@ public class FereastraAngajati extends javax.swing.JFrame {
         String nume = campNume.getText();
         String parola = campParola.getText();
         String rol = campRol.getText();
-        
+
+        // Adauga in BD
         BazaDeDate.adaugaUtilizator(user, parola, nume, rol);
-        String id = BazaDeDate.returneazaUltimaCheie();
         
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        String[] row = {id, user, nume, rol};
-        model.addRow(row);
+        // Adauga in lista statica
+        int id = BazaDeDate.returneazaUltimaCheie();
+        Angajat angajat = new Angajat(id, user, nume, Integer.parseInt(rol));
+        Angajat.adauga(angajat);
+        
+        // Adauga in JTable
+        Angajat.adaugaJtable((DefaultTableModel) jTable1.getModel(), angajat);
     }//GEN-LAST:event_butonAdaugareUtlizatorActionPerformed
 
     private void butonStergereUtilizatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonStergereUtilizatorActionPerformed
         // TODO add your handling code here:
-        if (jTable1.getSelectedRowCount() == 1) {
-            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-            int row = jTable1.getSelectedRow();
-            String id = (String) model.getValueAt(row, 0);
-            BazaDeDate.stergeUtilizator(id);
-            model.removeRow(row);
+        if (jTable1.getSelectedRowCount() != 1) {
+            return;
         }
+        // Sterge din JTable
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        int indexRand = jTable1.getSelectedRow();
+        String stringId = (String) model.getValueAt(indexRand, 0);
+        model.removeRow(indexRand);
+        
+        // Sterge din lista statica
+        Angajat.sterge(Integer.parseInt(stringId));
+        
+        // Sterge din BD
+        BazaDeDate.stergeUtilizator(stringId);
     }//GEN-LAST:event_butonStergereUtilizatorActionPerformed
 
     /**

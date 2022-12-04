@@ -17,10 +17,11 @@ public class SistemGestiunePub {
     public static void main(String[] args) {
         // TODO code application logic here
         //new FereastraLogin().setVisible(true);
-        //new FereastraMeseAdmin().setVisible(true);
-        new FereastraMeseAngajat().setVisible(true);
+        new FereastraMeseAdmin().setVisible(true);
+        //new FereastraMeseAngajat().setVisible(true);
         //new FereastraAngajati().setVisible(true);
         //new FereastraProduse().setVisible(true);
+        //new FereastraComanda().setVisible(true);
     }
     
 }

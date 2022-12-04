@@ -18,7 +18,8 @@ public class FereastraProduse extends javax.swing.JFrame {
      */
     public FereastraProduse() {
         initComponents();
-        BazaDeDate.extrageProduse(jTable1);
+        Produs.citeste();
+        Produs.completeazaJtable((DefaultTableModel) jTable1.getModel());
     }
 
     /**
@@ -135,41 +136,53 @@ public class FereastraProduse extends javax.swing.JFrame {
         // TODO add your handling code here:
         String nume = campNume.getText();
         String pret = campPret.getText();
-
+        // Adaugare in BD
         BazaDeDate.adaugaProdus(nume, pret);
-        String id = BazaDeDate.returneazaUltimaCheie();
-
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        String[] row = {id, nume, pret};
-        model.addRow(row);
+        int id = BazaDeDate.returneazaUltimaCheie();
+        Produs produs = new Produs(id, nume, Integer.parseInt(pret));
+        // Adaugare in lista statica
+        Produs.adauga(produs);
+        // Adaugare in JTable
+        Produs.adaugaJtable((DefaultTableModel) jTable1.getModel(), produs);
     }//GEN-LAST:event_butonAdaugareProdusActionPerformed
 
     private void butonStergereProdusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonStergereProdusActionPerformed
         // TODO add your handling code here:
-        if (jTable1.getSelectedRowCount() == 1) {
-            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-            int row = jTable1.getSelectedRow();
-            String id = (String) model.getValueAt(row, 0);
-            BazaDeDate.stergeProdus(id);
-            model.removeRow(row);
+        if (jTable1.getSelectedRowCount() != 1) {
+            return;
         }
+        // Identificare produs
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        int indexRand = jTable1.getSelectedRow();
+        String id = (String) model.getValueAt(indexRand, 0);
+        // Stergere din BD
+        BazaDeDate.stergeProdus(id);
+        // Stergere din JTable
+        model.removeRow(indexRand);
     }//GEN-LAST:event_butonStergereProdusActionPerformed
 
     private void butonModificareProdusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonModificareProdusActionPerformed
         // TODO add your handling code here:
-        if (jTable1.getSelectedColumnCount() == 1) {
-            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-            int row = jTable1.getSelectedRow();
-            String id = (String) model.getValueAt(row, 0);
-            String nume = campNume.getText();
-            String pret = campPret.getText();
-            
-            BazaDeDate.actualizeazaProdus(id, nume, pret);
-            // Actualizare in jTable
-            model.setValueAt(nume, row, 1);
-            model.setValueAt(pret, row, 2);
-            model.fireTableDataChanged();
+        if (jTable1.getSelectedColumnCount() != 1) {
+            return;
         }
+        // Extragere date noi din text field
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        int indexRand = jTable1.getSelectedRow();
+        String stringId = (String) model.getValueAt(indexRand, 0);
+        String nume = campNume.getText();
+        String stringPret = campPret.getText();
+        //Actualizeaza in BD
+        BazaDeDate.actualizeazaProdus(stringId, nume, stringPret);
+        // Actualizare in jTable
+        model.setValueAt(nume, indexRand, 1);
+        model.setValueAt(stringPret, indexRand, 2);
+        model.fireTableDataChanged();
+        //Actualizeaza in lista statica
+        int index = Produs.getIndex(Integer.parseInt(stringId));
+        Produs produs = Produs.get(index);
+        produs.setNume(nume);
+        produs.setPret(Integer.parseInt(stringPret));
     }//GEN-LAST:event_butonModificareProdusActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked

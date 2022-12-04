@@ -13,6 +13,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import static javax.swing.SwingUtilities.convertPoint;
 
@@ -21,7 +22,7 @@ import static javax.swing.SwingUtilities.convertPoint;
  * @author User
  */
 public class FereastraMeseAdmin extends javax.swing.JFrame
-                                implements MouseListener, MouseMotionListener {
+        implements MouseListener, MouseMotionListener {
 
     /**
      * Creates new form FereastraMeseAdmin
@@ -32,12 +33,12 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
 
     public FereastraMeseAdmin() {
         initComponents();
-        
+
         // Initializare variabile
         modStergere = false;
         jLabelIdUser.setText(String.valueOf(FereastraLogin.idUser));
-        
-        BazaDeDate.extrageMese(panouMese, this);  
+
+        Masa.citeste(panouMese, this);
         panouMese.revalidate();
         panouMese.repaint();
     }
@@ -57,6 +58,7 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
         butonGestionareAngajati = new javax.swing.JButton();
         butonGestionareProduse = new javax.swing.JButton();
         jLabelIdUser = new javax.swing.JLabel();
+        butonRaport = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -103,50 +105,49 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
 
         jLabelIdUser.setText("jLabel1");
 
+        butonRaport.setText("genereaza raport");
+        butonRaport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                butonRaportActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(50, 50, 50)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(panouMese, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(butonAdaugareMasa)
-                            .addComponent(butonModStergere))
-                        .addGap(39, 39, 39))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(butonGestionareProduse)
-                            .addComponent(butonGestionareAngajati))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabelIdUser)
-                .addGap(134, 134, 134))
+                    .addComponent(jLabelIdUser)
+                    .addComponent(butonModStergere)
+                    .addComponent(butonAdaugareMasa)
+                    .addComponent(butonGestionareAngajati)
+                    .addComponent(butonGestionareProduse)
+                    .addComponent(butonRaport))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panouMese, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(jLabelIdUser)
-                        .addGap(57, 57, 57)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(butonAdaugareMasa)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(butonModStergere)
-                        .addGap(34, 34, 34)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(butonGestionareAngajati)
-                        .addGap(18, 18, 18)
-                        .addComponent(butonGestionareProduse))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(60, 60, 60)
-                        .addComponent(panouMese, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(50, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(butonGestionareProduse)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(butonRaport)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -154,23 +155,29 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
 
     private void butonAdaugareMasaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonAdaugareMasaActionPerformed
         // TODO add your handling code here:
+
+        // Variabile implicite
         int xImplicit = 100;
         int yImplicit = 100;
+
+        // Creare masa
         Masa masa = new Masa(xImplicit, yImplicit, panouMese);
         masa.buton.addMouseListener(this);
         masa.buton.addMouseMotionListener(this);
 
-        if (Masa.verifica(masa.buton)) {
-            Masa.sterge(masa.buton, panouMese);
+        if (Masa.seSuprapune(masa.buton)) {
+            JOptionPane.showMessageDialog(new JFrame(), "Exista alta masa in pozitia de spawn.");
             return;
         }
-        
+        // Adaugare in lista statica
+        Masa.adauga(masa);
+        panouMese.add(masa.buton);
+
+        // Adaugare in BD
         BazaDeDate.adaugaMasa(xImplicit, yImplicit);
-        // Adaugare id
-        String stringId = BazaDeDate.returneazaUltimaCheie();
-        int integerId = Integer.parseInt(stringId);
-        masa.setId(integerId);
-        
+        masa.setId(BazaDeDate.returneazaUltimaCheie());
+
+        // Redesenare panou
         panouMese.revalidate();
         panouMese.repaint();
     }//GEN-LAST:event_butonAdaugareMasaActionPerformed
@@ -192,18 +199,24 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
         FereastraAngajati f = new FereastraAngajati();
         f.setAlwaysOnTop(true);
         f.setVisible(true);
-        f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);   
+        f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
     }//GEN-LAST:event_butonGestionareAngajatiActionPerformed
 
     private void butonGestionareProduseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonGestionareProduseActionPerformed
         // TODO add your handling code here:
-        //this.setVisible(false);
         FereastraProduse f = new FereastraProduse();
+        f.setAlwaysOnTop(true);
         f.setVisible(true);
         f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        
-        
     }//GEN-LAST:event_butonGestionareProduseActionPerformed
+
+    private void butonRaportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonRaportActionPerformed
+        // TODO add your handling code here:
+        FereastraRaport f = new FereastraRaport();
+        f.setAlwaysOnTop(true);
+        f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+    }//GEN-LAST:event_butonRaportActionPerformed
 
     /**
      * @param args the command line arguments
@@ -247,6 +260,7 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
     private javax.swing.JButton butonGestionareAngajati;
     private javax.swing.JButton butonGestionareProduse;
     private javax.swing.JButton butonModStergere;
+    private javax.swing.JButton butonRaport;
     private javax.swing.JLabel jLabelIdUser;
     private javax.swing.JPanel panouMese;
     // End of variables declaration//GEN-END:variables
@@ -267,7 +281,7 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
             return;
         }
         pozitieStart = SwingUtilities.convertPoint(masaSelectata, e.getPoint(),
-                                                    masaSelectata.getParent());
+                masaSelectata.getParent());
     }
 
     @Override
@@ -287,29 +301,29 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
     @Override
     public void mouseDragged(MouseEvent e) {
         Point pozitieMouse = convertPoint(masaSelectata, e.getPoint(),
-                                            masaSelectata.getParent());
-        
+                masaSelectata.getParent());
+
         if (this.getBounds().contains(pozitieMouse)) {
             Point pozitieVeche = masaSelectata.getLocation();
             Point pozitieNoua = masaSelectata.getLocation();
             pozitieNoua.translate(pozitieMouse.x - pozitieStart.x,
-                                    pozitieMouse.y - pozitieStart.y);
+                    pozitieMouse.y - pozitieStart.y);
 
             // Prevenim depasirea panoului
             pozitieNoua.x = Math.max(pozitieNoua.x, 0);
             pozitieNoua.y = Math.max(pozitieNoua.y, 0);
             pozitieNoua.x = Math.min(pozitieNoua.x, masaSelectata.getParent().getWidth()
-                                        - masaSelectata.getWidth());
+                    - masaSelectata.getWidth());
             pozitieNoua.y = Math.min(pozitieNoua.y, masaSelectata.getParent().getHeight()
-                                        - masaSelectata.getHeight());
+                    - masaSelectata.getHeight());
 
             // Prevenim coliziunea
             for (int i = 0; i < Masa.mese.size(); i++) {
                 Rectangle masaInViitor = new Rectangle(pozitieNoua.x, pozitieNoua.y,
-                                                        Masa.latura, Masa.latura);
-                
+                        Masa.latura, Masa.latura);
+
                 if (masaInViitor.intersects(Masa.mese.get(i).buton.getBounds())
-                        & (Masa.mese.get(i).buton != masaSelectata) ) {
+                        & (Masa.mese.get(i).buton != masaSelectata)) {
                     return;
                 }
             }

@@ -7,9 +7,7 @@ package sistemgestiunepub;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 
 /**
  *
@@ -24,10 +22,12 @@ public class FereastraMeseAngajat extends javax.swing.JFrame implements MouseLis
         initComponents();
         
         jLabelIdUser.setText(String.valueOf(FereastraLogin.idUser));
-
-        BazaDeDate.extrageMese(panouMese, this);
+        
+        Masa.citeste(panouMese, this);
         panouMese.revalidate();
         panouMese.repaint();
+        
+        Comanda.initializeaza();
     }
 
     /**
@@ -50,11 +50,11 @@ public class FereastraMeseAngajat extends javax.swing.JFrame implements MouseLis
         panouMese.setLayout(panouMeseLayout);
         panouMeseLayout.setHorizontalGroup(
             panouMeseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 472, Short.MAX_VALUE)
+            .addGap(0, 614, Short.MAX_VALUE)
         );
         panouMeseLayout.setVerticalGroup(
             panouMeseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 438, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         jLabelIdUser.setText("jLabel1");
@@ -65,21 +65,21 @@ public class FereastraMeseAngajat extends javax.swing.JFrame implements MouseLis
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panouMese, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(64, 64, 64)
+                .addComponent(panouMese, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabelIdUser)
-                .addContainerGap(95, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panouMese, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panouMese, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabelIdUser)
+                        .addGap(0, 422, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addComponent(jLabelIdUser)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -129,16 +129,8 @@ public class FereastraMeseAngajat extends javax.swing.JFrame implements MouseLis
     public void mouseClicked(MouseEvent e) {
         // Detectarea mesei apasate
         JButton masaSelectata = (JButton) e.getSource();
-        int id = Masa.getId(masaSelectata);
-
-        FereastraComanda f = new FereastraComanda();
-        f.setTitle(String.valueOf(id));
-        
-        f.setAlwaysOnTop(true);
-        f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        
-        f.setVisible(true);
-
+        int idMasa = Masa.getId(masaSelectata);
+        Comanda.afiseaza(idMasa);
     }
 
     @Override
