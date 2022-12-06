@@ -6,6 +6,7 @@
 package sistemgestiunepub;
 
 import com.mysql.jdbc.Connection;
+import java.awt.Color;
 import java.awt.Point;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,6 +15,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -23,14 +25,23 @@ import javax.swing.JPanel;
 public class ModelMasa {
 
     public static ArrayList<ModelMasa> mese = null;
-    public static int latura = 75;
-    public JButton buton;
+    private static int latura = 75;
+    private static int xImplicit = 100;
+    private static int yImplicit = 100;
+    private static Color culoareImplicita = Color.GREEN;
+    private static Color culoareOcupat = Color.YELLOW;
+    private JButton buton;
     private int id;
+
+    public ModelMasa() {
+        this(xImplicit, yImplicit);
+    }
 
     public ModelMasa(int x, int y) {
         buton = new JButton();
         buton.setLocation(x, y);
         buton.setSize(latura, latura);
+        buton.setBackground(culoareImplicita);
         buton.setVisible(true);
     }
 
@@ -40,13 +51,25 @@ public class ModelMasa {
         buton.setText(String.valueOf(id));
     }
 
-    public static void adaugaInMemorie(ModelMasa masa) {
-        mese.add(masa);
-    }
-
     public void setId(int id) {
         this.id = id;
         buton.setText(String.valueOf(id));
+    }
+
+    public void setOcupat() {
+        this.buton.setBackground(culoareOcupat);
+    }
+
+    public void setLiber() {
+        this.buton.setBackground(culoareImplicita);
+    }
+
+    public static int getLatura() {
+        return latura;
+    }
+
+    public JButton getButon() {
+        return buton;
     }
 
     int getId() {
@@ -54,12 +77,25 @@ public class ModelMasa {
     }
 
     public static int getId(JButton cautat) {
-        for (ModelMasa i : mese) {
-            if (i.buton == cautat) {
-                return i.id;
+        for (ModelMasa masa : mese) {
+            if (masa.buton == cautat) {
+                return masa.id;
             }
         }
         return -1;
+    }
+
+    public static ModelMasa getById(int id) {
+        for (ModelMasa masa : mese) {
+            if (masa.id == id) {
+                return masa;
+            }
+        }
+        return null;
+    }
+
+    public static void adaugaInMemorie(ModelMasa masa) {
+        mese.add(masa);
     }
 
     public static void stergeDinMemorie(JButton deSters) {
@@ -127,11 +163,11 @@ public class ModelMasa {
             rs.close();
             stmt.close();
         } catch (Exception e) {
-            System.out.println("EROARE EXTRAGERE MESE DIN BD");
+            JOptionPane.showMessageDialog(new JFrame(), "EROARE EXTRAGERE MESE DIN BD");
         }
     }
 
-    public static void adaugaInBd(int x, int y) {
+    public static Boolean adaugaInBd(int x, int y) {
         try {
             Connection con = BazaDeDate.getInstanta();
             String sql = "INSERT INTO Masa(x, y) value (?, ?)";
@@ -141,11 +177,13 @@ public class ModelMasa {
             stmt.execute();
             stmt.close();
         } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("EROARE BUTON ADAUGA MASA");
+            JOptionPane.showMessageDialog(new JFrame(), "EROARE ADAUGA MASA IN BD");
+            return true;
         }
+        return false;
     }
 
-    public static void stergeDinBd(JButton deSters) {
+    public static Boolean stergeDinBd(JButton deSters) {
         try {
             java.sql.Connection con = BazaDeDate.getInstanta();
             String sql = "DELETE FROM Masa WHERE x = ? AND y = ?";
@@ -155,8 +193,10 @@ public class ModelMasa {
             stmt.execute();
             stmt.close();
         } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("EROARE STERGERE MASA");
+            JOptionPane.showMessageDialog(new JFrame(), "EROARE STERGERE MASA IN BD");
+            return true;
         }
+        return false;
     }
 
     public static void actualizeazaPozitieInBd(Point pozitieNoua,
@@ -172,7 +212,7 @@ public class ModelMasa {
             stmt.execute();
             stmt.close();
         } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("EROARE ACTUALIZARE LOCATIE MASA IN BD");
+            JOptionPane.showMessageDialog(new JFrame(), "EROARE ACTUALIZARE LOCATIE MASA IN BD");
         }
     }
 }

@@ -27,13 +27,13 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="panouMese" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="jLabelIdUser" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="butonModStergere" min="-2" max="-2" attributes="0"/>
-                  <Component id="butonAdaugareMasa" min="-2" max="-2" attributes="0"/>
-                  <Component id="butonGestionareAngajati" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="butonGestionareProduse" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="butonRaport" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="butonGestionareAngajati" alignment="0" max="32767" attributes="0"/>
+                  <Component id="butonGestionareProduse" alignment="0" max="32767" attributes="0"/>
+                  <Component id="butonAdaugareMasa" alignment="0" max="32767" attributes="0"/>
+                  <Component id="butonModStergere" alignment="0" max="32767" attributes="0"/>
+                  <Component id="butonRaport" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -76,7 +76,7 @@
     <Container class="javax.swing.JPanel" name="panouMese">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="cc" green="cc" red="0" type="rgb"/>
+          <Color blue="cc" green="0" red="66" type="rgb"/>
         </Property>
       </Properties>
 

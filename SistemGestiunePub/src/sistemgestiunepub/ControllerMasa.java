@@ -17,16 +17,23 @@ public class ControllerMasa {
     public static void adauga(ModelMasa masa, FereastraMeseAdmin f,
             JPanel jPanel) {
 
-        ModelMasa.adaugaInBd(masa.buton.getX(), masa.buton.getY());
+        Boolean eroare = ModelMasa.adaugaInBd(masa.getButon().getX(),
+                masa.getButon().getY());
+        if (eroare) {
+            return;
+        }
         masa.setId(BazaDeDate.returneazaUltimaCheie());
-        masa.buton.addMouseListener(f);
-        masa.buton.addMouseMotionListener(f);
+        masa.getButon().addMouseListener(f);
+        masa.getButon().addMouseMotionListener(f);
         ModelMasa.adaugaInMemorie(masa);
-        ModelMasa.adaugaInPanou(masa.buton, jPanel);
+        ModelMasa.adaugaInPanou(masa.getButon(), jPanel);
     }
 
     public static void sterge(JButton masa, JPanel jPanel) {
-        ModelMasa.stergeDinBd(masa);
+        Boolean eroare = ModelMasa.stergeDinBd(masa);
+        if (eroare) {
+            return;
+        }
         ModelMasa.stergeDinMemorie(masa);
         ModelMasa.stergeDinPanou(masa, jPanel);
     }

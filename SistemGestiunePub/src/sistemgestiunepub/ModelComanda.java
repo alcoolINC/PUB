@@ -43,26 +43,25 @@ public class ModelComanda {
         return comenzi.get(index);
     }
 
-    public static int getIndex(int idMasa) {
-        for (int i = 0; i < comenzi.size(); i++) {
-            if (comenzi.get(i).idMasa == idMasa) {
-                return i;
-            }
-        }
-        return -1;
+    public static void adaugaProdus(ModelComanda comanda, ModelProdus produs) {
+        comanda.produse.add(produs);
     }
 
-    public static void adaugaProdus(int index, ModelProdus produs) {
-        comenzi.get(index).produse.add(produs);
-    }
-
-    public static int calculeazaTotal(int index) {
+    public static int calculeazaTotal(ModelComanda comanda) {
         int total = 0;
-        ArrayList<ModelProdus> produse = comenzi.get(index).produse;
-        for (ModelProdus produs : produse) {
+        for (ModelProdus produs : comanda.produse) {
             total += produs.getPret();
         }
         return total;
+    }
+
+    public static ModelComanda getByIdMasa(int idMasa) {
+        for (ModelComanda comanda : comenzi) {
+            if (comanda.idMasa == idMasa) {
+                return comanda;
+            }
+        }
+        return null;
     }
 
     public void reseteaza() {
@@ -70,31 +69,29 @@ public class ModelComanda {
     }
 
     public static void afiseaza(int idMasa) {
-        // Extrage indexul comenzii in functie de id-ul mesei
-        int indexComanda = getIndex(idMasa);
         // Creeaza o fereastra
         FereastraComanda f = new FereastraComanda();
         f.setTitle(String.valueOf(idMasa));
         f.setAlwaysOnTop(true);
         f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         f.setVisible(true);
+        // Identifica comanda dupa id-ul mesei
+        ModelComanda comanda = getByIdMasa(idMasa);
         // Incarcare date despre comanda
-        DefaultTableModel modelJtable = f.getModelJtableComanda();
-        completeazaJtable(modelJtable, indexComanda);
+        completeazaJtable((DefaultTableModel) f.getModelJtableComanda(), comanda);
         /*
             Nu se poate face in constructorul ferestrei
             pt ca trebuie instantiata fereastra in primul rand
             numai dupa aceea se poate extrage id-ul mesei si al comenzii din title
          */
-
+        // Actualizeaza total
         JTextField campTotal = f.getJtextFieldTotal();
-        int total = calculeazaTotal(indexComanda);
+        int total = calculeazaTotal(comanda);
         campTotal.setText(String.valueOf(total));
     }
 
-    public static void completeazaJtable(DefaultTableModel jTable, int index) {
-        ArrayList<ModelProdus> produse = comenzi.get(index).produse;
-        for (ModelProdus produs : produse) {
+    public static void completeazaJtable(DefaultTableModel jTable, ModelComanda comanda) {
+        for (ModelProdus produs : comanda.produse) {
             adaugaInJtable(jTable, produs);
         }
     }

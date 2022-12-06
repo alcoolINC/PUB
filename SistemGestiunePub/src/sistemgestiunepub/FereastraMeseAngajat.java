@@ -50,7 +50,7 @@ public class FereastraMeseAngajat extends javax.swing.JFrame implements MouseLis
         panouMese.setLayout(panouMeseLayout);
         panouMeseLayout.setHorizontalGroup(
             panouMeseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 614, Short.MAX_VALUE)
+            .addGap(0, 546, Short.MAX_VALUE)
         );
         panouMeseLayout.setVerticalGroup(
             panouMeseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -65,10 +65,10 @@ public class FereastraMeseAngajat extends javax.swing.JFrame implements MouseLis
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panouMese, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panouMese, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabelIdUser)
-                .addContainerGap())
+                .addContainerGap(43, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -131,9 +131,6 @@ public class FereastraMeseAngajat extends javax.swing.JFrame implements MouseLis
         // Detectarea mesei apasate
         JButton masaSelectata = (JButton) e.getSource();
         ControllerComanda.afiseaza(masaSelectata);
-        /*
-        int idMasa = ModelMasa.getId(masaSelectata);
-        ModelComanda.afiseaza(idMasa);*/
     }
 
     @Override

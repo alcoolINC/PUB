@@ -40,7 +40,7 @@ public class FereastraRaport extends javax.swing.JFrame {
 
             },
             new String [] {
-                "id", "total vanzari"
+                "id", "nume", "total vanzari"
             }
         ));
         jScrollPane1.setViewportView(jTable1);

@@ -130,55 +130,46 @@ public class FereastraComanda extends javax.swing.JFrame {
 
     private void butonPlataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonPlataActionPerformed
         // TODO add your handling code here:
-        /*
-        int idUser = FereastraLogin.idUser;
-        int idMasa = getIdMasa();
-        int total = ModelComanda.calculeazaTotal(getIndexComanda());
-        ModelNota nota = new ModelNota(idUser, idMasa, total);
-        nota.adaugaInBd();
-        */
         ControllerComanda.plateste(this);
-        butonAnulare.doClick();
+        butonAnulare.doClick(); // Pentru resetare dupa plata
     }//GEN-LAST:event_butonPlataActionPerformed
 
     private void butonAdaugareProdusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonAdaugareProdusActionPerformed
         // TODO add your handling code here:
-
-        // Verifica produs selectat din jTable produse
         if (jTableProduse.getSelectedRowCount() != 1) {
             return;
         }
+
+        //Schimba culoarea mesei
+        ModelMasa.getById(getIdMasa()).setOcupat();
         
+        // Verifica produs selectat din jTable produse
         int indexRand = jTableProduse.getSelectedRow();
         DefaultTableModel model = (DefaultTableModel) jTableProduse.getModel();
         String idProdus = (String) model.getValueAt(indexRand, 0);
         int indexProdus = ModelProdus.getIndex(Integer.parseInt(idProdus));
         ModelProdus produs = ModelProdus.get(indexProdus);
-        int indexComanda = getIndexComanda();
-        
-        ControllerComanda.adaugaProdus(produs, indexComanda,
+        ModelComanda comanda = ModelComanda.getByIdMasa(getIdMasa());
+
+        ControllerComanda.adaugaProdus(produs, comanda,
                 (DefaultTableModel) jTableComanda.getModel());
+        
         // Actualizare total
-        int total = ModelComanda.calculeazaTotal(indexComanda);
+        int total = ModelComanda.calculeazaTotal(comanda);
         campTotal.setText(String.valueOf(total));
     }//GEN-LAST:event_butonAdaugareProdusActionPerformed
 
     private void butonAnulareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonAnulareActionPerformed
         // TODO add your handling code here:
-        int indexComanda = getIndexComanda();
-        ControllerComanda.anuleaza(indexComanda,
-                (DefaultTableModel) jTableComanda.getModel());
+        ModelComanda comanda = ModelComanda.getByIdMasa(getIdMasa());
+        ControllerComanda.anuleaza(comanda, (DefaultTableModel) jTableComanda.getModel());
         campTotal.setText("0");
+        ModelMasa.getById(getIdMasa()).setLiber();
     }//GEN-LAST:event_butonAnulareActionPerformed
-    
+
     public int getIdMasa() {
         String stringIdMasa = this.getTitle();
         return Integer.parseInt(stringIdMasa);
-    }
-    
-    public int getIndexComanda() {
-        int idMasa = getIdMasa();
-        return ModelComanda.getIndex(idMasa);
     }
 
     public DefaultTableModel getModelJtableComanda() {
@@ -188,7 +179,7 @@ public class FereastraComanda extends javax.swing.JFrame {
     public javax.swing.JTextField getJtextFieldTotal() {
         return campTotal;
     }
-    
+
     /**
      * @param args the command line arguments
      */

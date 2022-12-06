@@ -16,7 +16,10 @@ public class ControllerUser {
     public static void adauga(String user, String nume, String parola, int rol,
             DefaultTableModel jTable) {
 
-        ModelUser.adaugaInBd(user, parola, nume, rol);
+        Boolean eroare = ModelUser.adaugaInBd(user, parola, nume, rol);
+        if (eroare) {
+            return;
+        }
         int id = BazaDeDate.returneazaUltimaCheie();
         ModelUser tmp = new ModelUser(id, user, nume, rol);
         ModelUser.adaugaInMemorie(tmp);
@@ -24,8 +27,11 @@ public class ControllerUser {
     }
 
     public static void sterge(int id, DefaultTableModel jTable, int indexRand) {
-        jTable.removeRow(indexRand);
+        Boolean eroare = ModelUser.stergeDinBd(id);
+        if (eroare) {
+            return;
+        }
         ModelUser.stergeDinMemorie(id);
-        ModelUser.stergeDinBd(id);
+        jTable.removeRow(indexRand);
     }
 }

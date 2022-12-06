@@ -67,7 +67,7 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
             }
         });
 
-        panouMese.setBackground(new java.awt.Color(0, 204, 204));
+        panouMese.setBackground(new java.awt.Color(102, 0, 204));
 
         javax.swing.GroupLayout panouMeseLayout = new javax.swing.GroupLayout(panouMese);
         panouMese.setLayout(panouMeseLayout);
@@ -118,13 +118,13 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
                 .addContainerGap()
                 .addComponent(panouMese, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabelIdUser)
-                    .addComponent(butonModStergere)
-                    .addComponent(butonAdaugareMasa)
-                    .addComponent(butonGestionareAngajati)
-                    .addComponent(butonGestionareProduse)
-                    .addComponent(butonRaport))
+                    .addComponent(butonGestionareAngajati, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(butonGestionareProduse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(butonAdaugareMasa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(butonModStergere, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(butonRaport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -154,13 +154,11 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
 
     private void butonAdaugareMasaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonAdaugareMasaActionPerformed
         // TODO add your handling code here:
-        int xImplicit = 100;
-        int yImplicit = 100;
+        
+        // Creare masa in pozitia implicita
+        ModelMasa masa = new ModelMasa();
 
-        // Creare masa
-        ModelMasa masa = new ModelMasa(xImplicit, yImplicit);
-
-        if (ModelMasa.seSuprapune(masa.buton)) {
+        if (ModelMasa.seSuprapune(masa.getButon())) {
             JOptionPane.showMessageDialog(new JFrame(), "Exista alta masa in pozitia de spawn.");
             return;
         }
@@ -306,10 +304,10 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
         // Prevenim coliziunea
         for (int i = 0; i < ModelMasa.mese.size(); i++) {
             Rectangle masaInViitor = new Rectangle(pozitieNoua.x, pozitieNoua.y,
-                    ModelMasa.latura, ModelMasa.latura);
+                    ModelMasa.getLatura(), ModelMasa.getLatura());
 
-            if (masaInViitor.intersects(ModelMasa.mese.get(i).buton.getBounds())
-                    & (ModelMasa.mese.get(i).buton != masaSelectata)) {
+            if (masaInViitor.intersects(ModelMasa.mese.get(i).getButon().getBounds())
+                    & (ModelMasa.mese.get(i).getButon() != masaSelectata)) {
                 return;
             }
         }

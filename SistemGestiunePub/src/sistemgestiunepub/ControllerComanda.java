@@ -14,23 +14,23 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ControllerComanda {
 
-    public static void adaugaProdus(ModelProdus produs, int indexComanda,
+    public static void adaugaProdus(ModelProdus produs, ModelComanda comanda,
             DefaultTableModel jTable) {
 
-        ModelComanda.adaugaProdus(indexComanda, produs);
+        ModelComanda.adaugaProdus(comanda, produs);
         ModelComanda.adaugaInJtable(jTable, produs);
     }
 
     public static void plateste(FereastraComanda f) {
         int idUser = FereastraLogin.idUser;
         int idMasa = f.getIdMasa();
-        int total = ModelComanda.calculeazaTotal(f.getIndexComanda());
+        int total = ModelComanda.calculeazaTotal(ModelComanda.getByIdMasa(idMasa));
         ModelNota nota = new ModelNota(idUser, idMasa, total);
         nota.adaugaInBd();
     }
 
-    public static void anuleaza(int indexComanda, DefaultTableModel jTable) {
-        ModelComanda.get(indexComanda).reseteaza();
+    public static void anuleaza(ModelComanda comanda, DefaultTableModel jTable) {
+        comanda.reseteaza();
         ModelComanda.reseteazaJtable(jTable);
     }
 

@@ -12,6 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -106,7 +108,7 @@ public class ModelProdus {
             rs.close();
             stmt.close();
         } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("EROARE EXTRAGERE PRODUSE");
+            JOptionPane.showMessageDialog(new JFrame(), "EROARE EXTRAGERE PRODUSE");
         }
     }
 
@@ -122,7 +124,7 @@ public class ModelProdus {
         jTable.addRow(rand);
     }
 
-    public static void adaugaInBd(String nume, int pret) {
+    public static Boolean adaugaInBd(String nume, int pret) {
         try {
             Connection con = BazaDeDate.getInstanta();
             String sql = "INSERT INTO Produs(nume, pret) VALUE (?, ?)";
@@ -132,11 +134,13 @@ public class ModelProdus {
             stmt.execute();
             stmt.close();
         } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("EROARE ADAUGARE PRODUS");
+            JOptionPane.showMessageDialog(new JFrame(), "EROARE ADAUGARE PRODUS");
+            return true;
         }
+        return false;
     }
 
-    public static void stergeDinBd(int id) {
+    public static Boolean stergeDinBd(int id) {
         try {
             Connection con = BazaDeDate.getInstanta();
             String sql = "DELETE FROM Produs WHERE id = ?";
@@ -145,11 +149,13 @@ public class ModelProdus {
             stmt.execute();
             stmt.close();
         } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("EROARE STEGERE PRODUS");
+            JOptionPane.showMessageDialog(new JFrame(), "EROARE STEGERE PRODUS");
+            return true;
         }
+        return false;
     }
 
-    public static void modificaInBd(int id, String nume, int pret) {
+    public static Boolean modificaInBd(int id, String nume, int pret) {
         try {
             Connection con = BazaDeDate.getInstanta();
             String sql = "UPDATE Produs SET nume = ?, pret = ? WHERE id = ?";
@@ -160,8 +166,10 @@ public class ModelProdus {
             stmt.execute();
             stmt.close();
         } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("EROARE ACTUALIZARE PRODUS");
+            JOptionPane.showMessageDialog(new JFrame(), "EROARE ACTUALIZARE PRODUS");
+            return true;
         }
+        return false;
     }
 
     public static void modificaInJtable(String nume, int pret,

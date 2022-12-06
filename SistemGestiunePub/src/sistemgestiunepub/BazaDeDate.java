@@ -14,6 +14,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -67,7 +69,7 @@ public class BazaDeDate {
             rs.close();
             stmt.close();
         } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("EROARE BUTON LOGIN");
+            JOptionPane.showMessageDialog(new JFrame(), "EROARE BUTON LOGIN");
         }
         return -1;
     }
@@ -85,7 +87,7 @@ public class BazaDeDate {
                 System.out.println("EROARE CHEIE PRIMARA");
             }
         } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("EROARE AFLARE CHEIE PRIMARA UTILIZATOR");
+            JOptionPane.showMessageDialog(new JFrame(), "EROARE AFLARE CHEIE PRIMARA UTILIZATOR");
         }
         return id;
     }
@@ -93,16 +95,16 @@ public class BazaDeDate {
     public static void genereazaRaport(DefaultTableModel model) {
         try {
             Connection con = getInstanta();
-            String sql = "select id_user, sum(total) from Nota group by id_user;";
+            String sql = "SELECT nota.id_user, utilizator.nume, SUM(total) FROM Nota, Utilizator WHERE nota.id_user = utilizator.id GROUP BY id_user";
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
-                String[] rand = {rs.getString(1), rs.getString(2)};
+                String[] rand = {rs.getString(1), rs.getString(2), rs.getString(3)};
                 model.addRow(rand);
             }
             stmt.close();
         } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("EROARE ADAUGARE NOTA");
+            JOptionPane.showMessageDialog(new JFrame(), "EROARE GENERARE RAPORT");
         }
     }
 }

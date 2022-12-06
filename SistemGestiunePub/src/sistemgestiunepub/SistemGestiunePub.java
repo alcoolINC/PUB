@@ -19,9 +19,10 @@ public class SistemGestiunePub {
         //new FereastraLogin().setVisible(true);
         //new FereastraMeseAdmin().setVisible(true);
         //new FereastraMeseAngajat().setVisible(true);
-        //new FereastraAngajati().setVisible(true);
+        //new FereastraUseri().setVisible(true);
         //new FereastraProduse().setVisible(true);
         //new FereastraComanda().setVisible(true);
+        //new FereastraRaport().setVisible(true);
     }
     
 }

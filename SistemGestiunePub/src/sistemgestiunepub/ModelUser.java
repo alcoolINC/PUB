@@ -11,6 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -75,11 +77,11 @@ public class ModelUser {
             rs.close();
             stmt.close();
         } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("EROARE EXTRAGERE ANGAJAT");
+            JOptionPane.showMessageDialog(new JFrame(), "EROARE EXTRAGERE ANGAJAT");
         }
     }
 
-    public static void adaugaInBd(String user, String parola,
+    public static Boolean adaugaInBd(String user, String parola,
             String nume, int rol) {
 
         try {
@@ -93,11 +95,13 @@ public class ModelUser {
             stmt.execute();
             stmt.close();
         } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("EROARE INSERARE UTILIZATOR");
+            JOptionPane.showMessageDialog(new JFrame(), "EROARE INSERARE UTILIZATOR");
+            return true;
         }
+        return false;
     }
 
-    public static void stergeDinBd(int id) {
+    public static Boolean stergeDinBd(int id) {
         try {
             Connection con = BazaDeDate.getInstanta();
             String sql = "DELETE FROM Utilizator WHERE id = ?";
@@ -106,8 +110,10 @@ public class ModelUser {
             stmt.execute();
             stmt.close();
         } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("EROARE STEGERE UTILIZATOR");
+            JOptionPane.showMessageDialog(new JFrame(), "EROARE STEGERE UTILIZATOR");
+            return true;
         }
+        return false;
     }
 
     public static void completeazaJtable(DefaultTableModel model) {
