@@ -17,8 +17,7 @@ public class ControllerMasa {
     public static void adauga(ModelMasa masa, FereastraMeseAdmin f,
             JPanel jPanel) {
 
-        Boolean eroare = ModelMasa.adaugaInBd(masa.getButon().getX(),
-                masa.getButon().getY());
+        Boolean eroare = ModelMasa.adaugaInBd(masa);
         if (eroare) {
             return;
         }

@@ -11,6 +11,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -57,6 +58,7 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
         butonGestionareProduse = new javax.swing.JButton();
         jLabelIdUser = new javax.swing.JLabel();
         butonRaport = new javax.swing.JButton();
+        campNumar = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -122,9 +124,12 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
                     .addComponent(jLabelIdUser)
                     .addComponent(butonGestionareAngajati, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(butonGestionareProduse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(butonAdaugareMasa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(butonModStergere, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(butonRaport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(butonRaport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(butonAdaugareMasa)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(campNumar)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -136,7 +141,9 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabelIdUser)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(butonAdaugareMasa)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(butonAdaugareMasa)
+                            .addComponent(campNumar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(butonModStergere)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -156,7 +163,7 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
         // TODO add your handling code here:
         
         // Creare masa in pozitia implicita
-        ModelMasa masa = new ModelMasa();
+        ModelMasa masa = new ModelMasa(campNumar.getText());
 
         if (ModelMasa.seSuprapune(masa.getButon())) {
             JOptionPane.showMessageDialog(new JFrame(), "Exista alta masa in pozitia de spawn.");
@@ -244,6 +251,7 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
     private javax.swing.JButton butonGestionareProduse;
     private javax.swing.JButton butonModStergere;
     private javax.swing.JButton butonRaport;
+    private javax.swing.JTextField campNumar;
     private javax.swing.JLabel jLabelIdUser;
     private javax.swing.JPanel panouMese;
     // End of variables declaration//GEN-END:variables
@@ -302,12 +310,13 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
                 - masaSelectata.getHeight());
 
         // Prevenim coliziunea
-        for (int i = 0; i < ModelMasa.mese.size(); i++) {
+        ArrayList<ModelMasa> mese = ModelMasa.getMese();
+        for (int i = 0; i < mese.size(); i++) {
             Rectangle masaInViitor = new Rectangle(pozitieNoua.x, pozitieNoua.y,
                     ModelMasa.getLatura(), ModelMasa.getLatura());
 
-            if (masaInViitor.intersects(ModelMasa.mese.get(i).getButon().getBounds())
-                    & (ModelMasa.mese.get(i).getButon() != masaSelectata)) {
+            if (masaInViitor.intersects(mese.get(i).getButon().getBounds())
+                    & (mese.get(i).getButon() != masaSelectata)) {
                 return;
             }
         }

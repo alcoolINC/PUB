@@ -24,7 +24,7 @@ import javax.swing.JPanel;
  */
 public class ModelMasa {
 
-    public static ArrayList<ModelMasa> mese = null;
+    private static ArrayList<ModelMasa> mese = null;
     private static int latura = 75;
     private static int xImplicit = 100;
     private static int yImplicit = 100;
@@ -33,27 +33,26 @@ public class ModelMasa {
     private JButton buton;
     private int id;
 
-    public ModelMasa() {
-        this(xImplicit, yImplicit);
+    public ModelMasa(String text) {
+        this(text, xImplicit, yImplicit);
     }
 
-    public ModelMasa(int x, int y) {
+    public ModelMasa(String text, int x, int y) {
         buton = new JButton();
         buton.setLocation(x, y);
         buton.setSize(latura, latura);
         buton.setBackground(culoareImplicita);
+        buton.setText(text);
         buton.setVisible(true);
     }
 
-    public ModelMasa(int id, int x, int y) {
-        this(x, y);
+    public ModelMasa(int id, String numar, int x, int y) {
+        this(numar, x, y);
         this.id = id;
-        buton.setText(String.valueOf(id));
     }
 
     public void setId(int id) {
         this.id = id;
-        buton.setText(String.valueOf(id));
     }
 
     public void setOcupat() {
@@ -66,6 +65,10 @@ public class ModelMasa {
 
     public static int getLatura() {
         return latura;
+    }
+    
+    public static ArrayList<ModelMasa> getMese() {
+        return mese;
     }
 
     public JButton getButon() {
@@ -137,17 +140,18 @@ public class ModelMasa {
         try {
             java.sql.Connection con = BazaDeDate.getInstanta();
             Statement stmt = con.createStatement();
-            String sql = "SELECT id, x, y FROM Masa";
+            String sql = "SELECT id, numar, x, y FROM Masa";
             ResultSet rs = stmt.executeQuery(sql);
             mese = new ArrayList();
             while (rs.next()) {
                 // Extragere pozitie masa
                 int id = rs.getInt(1);
-                int x = rs.getInt(2);
-                int y = rs.getInt(3);
+                String numar = rs.getString(2);
+                int x = rs.getInt(3);
+                int y = rs.getInt(4);
 
                 // Instantiere masa
-                ModelMasa masa = new ModelMasa(id, x, y);
+                ModelMasa masa = new ModelMasa(id, numar, x, y);
                 adaugaInMemorie(masa);
                 ModelMasa.adaugaInPanou(masa.buton, panouMese);
 
@@ -167,13 +171,14 @@ public class ModelMasa {
         }
     }
 
-    public static Boolean adaugaInBd(int x, int y) {
+    public static Boolean adaugaInBd(ModelMasa masa) {
         try {
             Connection con = BazaDeDate.getInstanta();
-            String sql = "INSERT INTO Masa(x, y) value (?, ?)";
+            String sql = "INSERT INTO Masa(numar, x, y) value (?, ?, ?)";
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, x);
-            stmt.setInt(2, y);
+            stmt.setString(1, masa.buton.getText());
+            stmt.setInt(2, masa.buton.getX());
+            stmt.setInt(3, masa.buton.getY());
             stmt.execute();
             stmt.close();
         } catch (ClassNotFoundException | SQLException ex) {

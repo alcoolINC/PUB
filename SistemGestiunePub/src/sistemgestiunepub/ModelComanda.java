@@ -34,7 +34,7 @@ public class ModelComanda {
         }
 
         comenzi = new ArrayList();
-        for (ModelMasa masa : ModelMasa.mese) {
+        for (ModelMasa masa : ModelMasa.getMese()) {
             comenzi.add(new ModelComanda(masa.getId(), FereastraLogin.idUser));
         }
     }

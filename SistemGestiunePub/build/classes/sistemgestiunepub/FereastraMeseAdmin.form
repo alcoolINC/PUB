@@ -31,9 +31,13 @@
                   <Component id="jLabelIdUser" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="butonGestionareAngajati" alignment="0" max="32767" attributes="0"/>
                   <Component id="butonGestionareProduse" alignment="0" max="32767" attributes="0"/>
-                  <Component id="butonAdaugareMasa" alignment="0" max="32767" attributes="0"/>
                   <Component id="butonModStergere" alignment="0" max="32767" attributes="0"/>
                   <Component id="butonRaport" alignment="0" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="butonAdaugareMasa" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="campNumar" max="32767" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -48,7 +52,10 @@
                   <Group type="102" attributes="0">
                       <Component id="jLabelIdUser" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="butonAdaugareMasa" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="butonAdaugareMasa" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="campNumar" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="butonModStergere" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -129,6 +136,8 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="butonRaportActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="campNumar">
     </Component>
   </SubComponents>
 </Form>
