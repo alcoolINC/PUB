@@ -11,15 +11,15 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author User
  */
-public class FereastraAngajati extends javax.swing.JFrame {
+public class FereastraUseri extends javax.swing.JFrame {
 
     /**
      * Creates new form GestionareAngajati
      */
-    public FereastraAngajati() {
+    public FereastraUseri() {
         initComponents();
-        Angajat.citeste();
-        Angajat.completeazaJtable((DefaultTableModel) jTable1.getModel());
+        ModelUser.citesteDinBd();
+        ModelUser.completeazaJtable((DefaultTableModel) jTable1.getModel());
     }
 
     /**
@@ -134,6 +134,7 @@ public class FereastraAngajati extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void butonAdaugareUtlizatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonAdaugareUtlizatorActionPerformed
@@ -143,16 +144,8 @@ public class FereastraAngajati extends javax.swing.JFrame {
         String parola = campParola.getText();
         String rol = campRol.getText();
 
-        // Adauga in BD
-        BazaDeDate.adaugaUtilizator(user, parola, nume, rol);
-        
-        // Adauga in lista statica
-        int id = BazaDeDate.returneazaUltimaCheie();
-        Angajat angajat = new Angajat(id, user, nume, Integer.parseInt(rol));
-        Angajat.adauga(angajat);
-        
-        // Adauga in JTable
-        Angajat.adaugaJtable((DefaultTableModel) jTable1.getModel(), angajat);
+        ControllerUser.adauga(user, nume, parola, Integer.parseInt(rol),
+                (DefaultTableModel) jTable1.getModel());
     }//GEN-LAST:event_butonAdaugareUtlizatorActionPerformed
 
     private void butonStergereUtilizatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonStergereUtilizatorActionPerformed
@@ -160,17 +153,12 @@ public class FereastraAngajati extends javax.swing.JFrame {
         if (jTable1.getSelectedRowCount() != 1) {
             return;
         }
-        // Sterge din JTable
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        // Identificare
+        DefaultTableModel modelJtable = (DefaultTableModel) jTable1.getModel();
         int indexRand = jTable1.getSelectedRow();
-        String stringId = (String) model.getValueAt(indexRand, 0);
-        model.removeRow(indexRand);
-        
-        // Sterge din lista statica
-        Angajat.sterge(Integer.parseInt(stringId));
-        
-        // Sterge din BD
-        BazaDeDate.stergeUtilizator(stringId);
+        String stringId = (String) modelJtable.getValueAt(indexRand, 0);
+
+        ControllerUser.sterge(Integer.parseInt(stringId), modelJtable, indexRand);
     }//GEN-LAST:event_butonStergereUtilizatorActionPerformed
 
     /**
@@ -190,14 +178,18 @@ public class FereastraAngajati extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FereastraAngajati.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FereastraUseri.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FereastraAngajati.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FereastraUseri.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FereastraAngajati.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FereastraUseri.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FereastraAngajati.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FereastraUseri.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -206,7 +198,7 @@ public class FereastraAngajati extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FereastraAngajati().setVisible(true);
+                new FereastraUseri().setVisible(true);
             }
         });
     }

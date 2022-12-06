@@ -23,11 +23,11 @@ public class FereastraMeseAngajat extends javax.swing.JFrame implements MouseLis
         
         jLabelIdUser.setText(String.valueOf(FereastraLogin.idUser));
         
-        Masa.citeste(panouMese, this);
+        ModelMasa.citesteDinBd(panouMese, this);
         panouMese.revalidate();
         panouMese.repaint();
         
-        Comanda.initializeaza();
+        ModelComanda.initializeaza();
     }
 
     /**
@@ -83,6 +83,7 @@ public class FereastraMeseAngajat extends javax.swing.JFrame implements MouseLis
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -129,8 +130,10 @@ public class FereastraMeseAngajat extends javax.swing.JFrame implements MouseLis
     public void mouseClicked(MouseEvent e) {
         // Detectarea mesei apasate
         JButton masaSelectata = (JButton) e.getSource();
-        int idMasa = Masa.getId(masaSelectata);
-        Comanda.afiseaza(idMasa);
+        ControllerComanda.afiseaza(masaSelectata);
+        /*
+        int idMasa = ModelMasa.getId(masaSelectata);
+        ModelComanda.afiseaza(idMasa);*/
     }
 
     @Override

@@ -38,9 +38,7 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
         modStergere = false;
         jLabelIdUser.setText(String.valueOf(FereastraLogin.idUser));
 
-        Masa.citeste(panouMese, this);
-        panouMese.revalidate();
-        panouMese.repaint();
+        ModelMasa.citesteDinBd(panouMese, this);
     }
 
     /**
@@ -151,35 +149,23 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void butonAdaugareMasaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonAdaugareMasaActionPerformed
         // TODO add your handling code here:
-
-        // Variabile implicite
         int xImplicit = 100;
         int yImplicit = 100;
 
         // Creare masa
-        Masa masa = new Masa(xImplicit, yImplicit, panouMese);
-        masa.buton.addMouseListener(this);
-        masa.buton.addMouseMotionListener(this);
+        ModelMasa masa = new ModelMasa(xImplicit, yImplicit);
 
-        if (Masa.seSuprapune(masa.buton)) {
+        if (ModelMasa.seSuprapune(masa.buton)) {
             JOptionPane.showMessageDialog(new JFrame(), "Exista alta masa in pozitia de spawn.");
             return;
         }
-        // Adaugare in lista statica
-        Masa.adauga(masa);
-        panouMese.add(masa.buton);
 
-        // Adaugare in BD
-        BazaDeDate.adaugaMasa(xImplicit, yImplicit);
-        masa.setId(BazaDeDate.returneazaUltimaCheie());
-
-        // Redesenare panou
-        panouMese.revalidate();
-        panouMese.repaint();
+        ControllerMasa.adauga(masa, this, panouMese);
     }//GEN-LAST:event_butonAdaugareMasaActionPerformed
 
     private void butonModStergereActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonModStergereActionPerformed
@@ -195,8 +181,7 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
 
     private void butonGestionareAngajatiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonGestionareAngajatiActionPerformed
         // TODO add your handling code here:
-        //this.setVisible(false);
-        FereastraAngajati f = new FereastraAngajati();
+        FereastraUseri f = new FereastraUseri();
         f.setAlwaysOnTop(true);
         f.setVisible(true);
         f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -273,13 +258,12 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
     public void mousePressed(MouseEvent e) {
         // Detectarea mesei apasate
         masaSelectata = (JButton) e.getSource();
+        
         if (modStergere == true) {
-            BazaDeDate.stergeMasa(masaSelectata);
-            Masa.sterge(masaSelectata, panouMese);
-            panouMese.revalidate();
-            panouMese.repaint();
+            ControllerMasa.sterge(masaSelectata, panouMese);
             return;
         }
+        
         pozitieStart = SwingUtilities.convertPoint(masaSelectata, e.getPoint(),
                 masaSelectata.getParent());
     }
@@ -303,36 +287,40 @@ public class FereastraMeseAdmin extends javax.swing.JFrame
         Point pozitieMouse = convertPoint(masaSelectata, e.getPoint(),
                 masaSelectata.getParent());
 
-        if (this.getBounds().contains(pozitieMouse)) {
-            Point pozitieVeche = masaSelectata.getLocation();
-            Point pozitieNoua = masaSelectata.getLocation();
-            pozitieNoua.translate(pozitieMouse.x - pozitieStart.x,
-                    pozitieMouse.y - pozitieStart.y);
-
-            // Prevenim depasirea panoului
-            pozitieNoua.x = Math.max(pozitieNoua.x, 0);
-            pozitieNoua.y = Math.max(pozitieNoua.y, 0);
-            pozitieNoua.x = Math.min(pozitieNoua.x, masaSelectata.getParent().getWidth()
-                    - masaSelectata.getWidth());
-            pozitieNoua.y = Math.min(pozitieNoua.y, masaSelectata.getParent().getHeight()
-                    - masaSelectata.getHeight());
-
-            // Prevenim coliziunea
-            for (int i = 0; i < Masa.mese.size(); i++) {
-                Rectangle masaInViitor = new Rectangle(pozitieNoua.x, pozitieNoua.y,
-                        Masa.latura, Masa.latura);
-
-                if (masaInViitor.intersects(Masa.mese.get(i).buton.getBounds())
-                        & (Masa.mese.get(i).buton != masaSelectata)) {
-                    return;
-                }
-            }
-
-            // Actualizare locatie
-            pozitieStart = pozitieMouse;
-            masaSelectata.setLocation(pozitieNoua);
-            BazaDeDate.actualizeazaPozitieMasa(pozitieNoua, pozitieVeche);
+        if (!(panouMese.getBounds().contains(pozitieMouse))) {
+            return;
         }
+        
+        Point pozitieVeche = masaSelectata.getLocation();
+        Point pozitieNoua = masaSelectata.getLocation();
+        pozitieNoua.translate(pozitieMouse.x - pozitieStart.x, pozitieMouse.y - pozitieStart.y);
+
+        // Prevenim depasirea panoului
+        pozitieNoua.x = Math.max(pozitieNoua.x, 0);
+        pozitieNoua.y = Math.max(pozitieNoua.y, 0);
+        pozitieNoua.x = Math.min(pozitieNoua.x, masaSelectata.getParent().getWidth()
+                - masaSelectata.getWidth());
+        pozitieNoua.y = Math.min(pozitieNoua.y, masaSelectata.getParent().getHeight()
+                - masaSelectata.getHeight());
+
+        // Prevenim coliziunea
+        for (int i = 0; i < ModelMasa.mese.size(); i++) {
+            Rectangle masaInViitor = new Rectangle(pozitieNoua.x, pozitieNoua.y,
+                    ModelMasa.latura, ModelMasa.latura);
+
+            if (masaInViitor.intersects(ModelMasa.mese.get(i).buton.getBounds())
+                    & (ModelMasa.mese.get(i).buton != masaSelectata)) {
+                return;
+            }
+        }
+
+        // Actualizare locatie
+        pozitieStart = pozitieMouse;
+        masaSelectata.setLocation(pozitieNoua);
+        ModelMasa.actualizeazaPozitieInBd(pozitieNoua, pozitieVeche);
+
+        panouMese.revalidate();
+        panouMese.repaint();
     }
 
     @Override

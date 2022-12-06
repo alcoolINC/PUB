@@ -6,6 +6,7 @@
 package sistemgestiunepub;
 
 import com.mysql.jdbc.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -16,23 +17,23 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author User
  */
-public class Angajat {
+public class ModelUser {
 
     private String user;
     private String nume;
     private int rol;
     private int id;
 
-    private static ArrayList<Angajat> angajati = null;
+    private static ArrayList<ModelUser> angajati = null;
 
-    public Angajat(int id, String user, String nume, int rol) {
+    public ModelUser(int id, String user, String nume, int rol) {
         this.id = id;
         this.user = user;
         this.nume = nume;
         this.rol = rol;
     }
 
-    public static void adauga(Angajat angajat) {
+    public static void adaugaInMemorie(ModelUser angajat) {
         angajati.add(angajat);
     }
 
@@ -45,7 +46,7 @@ public class Angajat {
         return -1;
     }
 
-    public static void sterge(int id) {
+    public static void stergeDinMemorie(int id) {
         int index = getIndex(id);
         if (index == -1) {
             return;
@@ -53,7 +54,7 @@ public class Angajat {
         angajati.remove(index);
     }
 
-    public static void citeste() {
+    public static void citesteDinBd() {
         if (angajati != null) {
             return;
         }
@@ -69,7 +70,7 @@ public class Angajat {
                 String user = rs.getString(2);
                 String nume = rs.getString(3);
                 int rol = rs.getInt(4);
-                angajati.add(new Angajat(id, user, nume, rol));
+                adaugaInMemorie(new ModelUser(id, user, nume, rol));
             }
             rs.close();
             stmt.close();
@@ -78,13 +79,44 @@ public class Angajat {
         }
     }
 
-    public static void completeazaJtable(DefaultTableModel model) {
-        for (Angajat angajat : angajati) {
-            adaugaJtable(model, angajat);
+    public static void adaugaInBd(String user, String parola,
+            String nume, int rol) {
+
+        try {
+            Connection con = BazaDeDate.getInstanta();
+            String sql = "INSERT INTO Utilizator(username, parola, nume, rol) VALUE (?, ?, ?, ?)";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, user);
+            stmt.setString(2, parola);
+            stmt.setString(3, nume);
+            stmt.setInt(4, rol);
+            stmt.execute();
+            stmt.close();
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println("EROARE INSERARE UTILIZATOR");
         }
     }
 
-    public static void adaugaJtable(DefaultTableModel model, Angajat angajat) {
+    public static void stergeDinBd(int id) {
+        try {
+            Connection con = BazaDeDate.getInstanta();
+            String sql = "DELETE FROM Utilizator WHERE id = ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, id);
+            stmt.execute();
+            stmt.close();
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println("EROARE STEGERE UTILIZATOR");
+        }
+    }
+
+    public static void completeazaJtable(DefaultTableModel model) {
+        for (ModelUser angajat : angajati) {
+            adaugaInJtable(model, angajat);
+        }
+    }
+
+    public static void adaugaInJtable(DefaultTableModel model, ModelUser angajat) {
         String[] rand = {String.valueOf(angajat.id), angajat.user, angajat.nume,
             String.valueOf(angajat.rol)};
         model.addRow(rand);

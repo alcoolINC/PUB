@@ -18,8 +18,8 @@ public class FereastraComanda extends javax.swing.JFrame {
      */
     public FereastraComanda() {
         initComponents();
-        Produs.citeste();
-        Produs.completeazaJtable((DefaultTableModel) jTableProduse.getModel());
+        ModelProdus.citesteDinBd();
+        ModelProdus.completeazaJtable((DefaultTableModel) jTableProduse.getModel());
     }
 
     /**
@@ -125,15 +125,19 @@ public class FereastraComanda extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void butonPlataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonPlataActionPerformed
         // TODO add your handling code here:
+        /*
         int idUser = FereastraLogin.idUser;
         int idMasa = getIdMasa();
-        int total = Comanda.calculeazaTotal(getIndexComanda());
-        Nota nota = new Nota(idUser, idMasa, total);
-        BazaDeDate.adaugaNota(nota);
+        int total = ModelComanda.calculeazaTotal(getIndexComanda());
+        ModelNota nota = new ModelNota(idUser, idMasa, total);
+        nota.adaugaInBd();
+        */
+        ControllerComanda.plateste(this);
         butonAnulare.doClick();
     }//GEN-LAST:event_butonPlataActionPerformed
 
@@ -148,35 +152,22 @@ public class FereastraComanda extends javax.swing.JFrame {
         int indexRand = jTableProduse.getSelectedRow();
         DefaultTableModel model = (DefaultTableModel) jTableProduse.getModel();
         String idProdus = (String) model.getValueAt(indexRand, 0);
-        int indexProdus = Produs.getIndex(Integer.parseInt(idProdus));
-        Produs produs = Produs.get(indexProdus);
-        
-        // Adauga in comanda
+        int indexProdus = ModelProdus.getIndex(Integer.parseInt(idProdus));
+        ModelProdus produs = ModelProdus.get(indexProdus);
         int indexComanda = getIndexComanda();
-        Comanda.adaugaProdus(indexComanda, produs);
         
-        // Adauga in jTable comanda
-        model = (DefaultTableModel) jTableComanda.getModel();
-        Comanda.adaugaJtable(model, produs);
-        
-        // Actualizeaza total
-        int total = Comanda.calculeazaTotal(indexComanda);
+        ControllerComanda.adaugaProdus(produs, indexComanda,
+                (DefaultTableModel) jTableComanda.getModel());
+        // Actualizare total
+        int total = ModelComanda.calculeazaTotal(indexComanda);
         campTotal.setText(String.valueOf(total));
     }//GEN-LAST:event_butonAdaugareProdusActionPerformed
 
     private void butonAnulareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonAnulareActionPerformed
         // TODO add your handling code here:
-        
-        // Actualizeaza lista produse din comanda
         int indexComanda = getIndexComanda();
-        Comanda.get(indexComanda).reseteaza();
-        
-        // Actualizare JTable
-        DefaultTableModel model = (DefaultTableModel) jTableComanda.getModel();
-        int nrRanduri = jTableComanda.getRowCount();
-        for (int i = nrRanduri-1; i >= 0; i--) {
-            model.removeRow(i);
-        }
+        ControllerComanda.anuleaza(indexComanda,
+                (DefaultTableModel) jTableComanda.getModel());
         campTotal.setText("0");
     }//GEN-LAST:event_butonAnulareActionPerformed
     
@@ -187,7 +178,7 @@ public class FereastraComanda extends javax.swing.JFrame {
     
     public int getIndexComanda() {
         int idMasa = getIdMasa();
-        return Comanda.getIndex(idMasa);
+        return ModelComanda.getIndex(idMasa);
     }
 
     public DefaultTableModel getModelJtableComanda() {

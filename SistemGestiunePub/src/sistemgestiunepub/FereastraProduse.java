@@ -18,8 +18,8 @@ public class FereastraProduse extends javax.swing.JFrame {
      */
     public FereastraProduse() {
         initComponents();
-        Produs.citeste();
-        Produs.completeazaJtable((DefaultTableModel) jTable1.getModel());
+        ModelProdus.citesteDinBd();
+        ModelProdus.completeazaJtable((DefaultTableModel) jTable1.getModel());
     }
 
     /**
@@ -130,20 +130,16 @@ public class FereastraProduse extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void butonAdaugareProdusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonAdaugareProdusActionPerformed
         // TODO add your handling code here:
         String nume = campNume.getText();
         String pret = campPret.getText();
-        // Adaugare in BD
-        BazaDeDate.adaugaProdus(nume, pret);
-        int id = BazaDeDate.returneazaUltimaCheie();
-        Produs produs = new Produs(id, nume, Integer.parseInt(pret));
-        // Adaugare in lista statica
-        Produs.adauga(produs);
-        // Adaugare in JTable
-        Produs.adaugaJtable((DefaultTableModel) jTable1.getModel(), produs);
+       
+        ControllerProdus.adauga(nume, Integer.parseInt(pret),
+                (DefaultTableModel) jTable1.getModel());
     }//GEN-LAST:event_butonAdaugareProdusActionPerformed
 
     private void butonStergereProdusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonStergereProdusActionPerformed
@@ -152,13 +148,11 @@ public class FereastraProduse extends javax.swing.JFrame {
             return;
         }
         // Identificare produs
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        DefaultTableModel modelJtable = (DefaultTableModel) jTable1.getModel();
         int indexRand = jTable1.getSelectedRow();
-        String id = (String) model.getValueAt(indexRand, 0);
-        // Stergere din BD
-        BazaDeDate.stergeProdus(id);
-        // Stergere din JTable
-        model.removeRow(indexRand);
+        String id = (String) modelJtable.getValueAt(indexRand, 0);
+        
+        ControllerProdus.sterge(Integer.parseInt(id), modelJtable, indexRand);
     }//GEN-LAST:event_butonStergereProdusActionPerformed
 
     private void butonModificareProdusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butonModificareProdusActionPerformed
@@ -166,23 +160,16 @@ public class FereastraProduse extends javax.swing.JFrame {
         if (jTable1.getSelectedColumnCount() != 1) {
             return;
         }
+      
         // Extragere date noi din text field
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        DefaultTableModel modelJtable = (DefaultTableModel) jTable1.getModel();
         int indexRand = jTable1.getSelectedRow();
-        String stringId = (String) model.getValueAt(indexRand, 0);
+        String stringId = (String) modelJtable.getValueAt(indexRand, 0);
         String nume = campNume.getText();
         String stringPret = campPret.getText();
-        //Actualizeaza in BD
-        BazaDeDate.actualizeazaProdus(stringId, nume, stringPret);
-        // Actualizare in jTable
-        model.setValueAt(nume, indexRand, 1);
-        model.setValueAt(stringPret, indexRand, 2);
-        model.fireTableDataChanged();
-        //Actualizeaza in lista statica
-        int index = Produs.getIndex(Integer.parseInt(stringId));
-        Produs produs = Produs.get(index);
-        produs.setNume(nume);
-        produs.setPret(Integer.parseInt(stringPret));
+    
+        ControllerProdus.modifica(Integer.parseInt(stringId), nume,
+                Integer.parseInt(stringPret), modelJtable, indexRand);
     }//GEN-LAST:event_butonModificareProdusActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
